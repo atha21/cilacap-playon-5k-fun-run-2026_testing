@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CILACAP PLAYON — 5K Fun Run 2026</title>
+  <meta name="description" content="Pendaftaran terbuka untuk event lari Cilacap Playon 5K Fun Run. Daftarkan dirimu hari ini dan nikmati lari menyenangkan!">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;0,900;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Satisfy&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandPink: '#E6748E',
+            brandPinkLight: '#F5C8D4',
+            brandTeal: '#6BB1AD',
+            brandTealDark: '#4A8E8A',
+            brandCream: '#EDECDB',
+            brandCreamDark: '#E0DEC9',
+            brandMelon: '#E5A9A9',
+            brandDark: '#2A2A2A',
+            brandWhite: '#FFFFFF'
+          },
+          fontFamily: {
+            title: ['Barlow Condensed', 'sans-serif'],
+            body: ['Nunito', 'sans-serif'],
+            satisfy: ['Satisfy', 'cursive']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      /* Placeholder background asset untuk section harga tiket & form pendaftaran */
+      --landing-ticket-bg: url('design-source/assets/aset2.jpeg');
+      --registration-form-bg: url('design-source/assets/aset2.jpeg');
+    }
+    .bg-halftone {
+      background-image: radial-gradient(rgba(200, 184, 154, 0.25) 1.5px, transparent 1.5px);
+      background-size: 14px 14px;
+    }
+  </style>
+
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-brandCream text-brandDark font-body antialiased">
+
+  <!-- ================= LANDING SECTION ================= -->
+  <div id="landing-section">
+    <!-- NAV -->
+    <nav class="sticky top-0 z-50 bg-[#EDECDB]/95 backdrop-blur-md border-b-2 border-brandPinkLight px-6">
+      <div class="max-w-6xl mx-auto flex items-center justify-between h-[58px]">
+        <div class="flex items-center gap-2">
+          <img src="./design-source/assets/logo.jpeg" alt="Logo Cilacap Playon" class="h-10 w-auto object-contain" />
+        </div>
+        <div class="flex gap-5 text-[11px] font-bold tracking-widest text-brandTealDark">
+          <a href="#tentang" class="hover:text-brandPink transition-colors">TENTANG</a>
+          <a href="#rute" class="hover:text-brandPink transition-colors">RUTE</a>
+          <a href="#fasilitas" class="hover:text-brandPink transition-colors">FASILITAS</a>
+          <a href="#daftar" class="hover:text-brandPink transition-colors">DAFTAR</a>
+          <a href="#kontak" class="hover:text-brandPink transition-colors">KONTAK</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="relative min-h-[90vh] flex flex-col justify-end overflow-hidden">
+      <img
+        src="./assets/home.jpeg"
+        alt="Peserta Cilacap PLAYON 5K Fun Run"
+        class="absolute inset-0 w-full h-full object-cover object-[center_30%]"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-[#EDECDB]/95 via-[#EDECDB]/30 to-black/5"></div>
+      
+      <div class="relative z-10 max-w-6xl mx-auto w-full px-6 py-12 flex flex-col items-start">
+        <div class="bg-[#EDECDB]/88 backdrop-blur-[4px] p-8 max-w-[560px] relative overflow-hidden shadow-sm border border-brandPinkLight/30">
+          
+          <!-- Geometric Decoration -->
+          <div class="absolute top-0 right-0 w-24 h-full pointer-events-none overflow-hidden">
+            <svg width="120" height="100%" viewBox="0 0 120 400" preserveAspectRatio="none">
+              <polygon points="120,0 50,0 120,100" fill="#E6748E" opacity="0.7" />
+              <polygon points="120,80 70,0 120,0" fill="#6BB1AD" opacity="0.5" />
+              <polygon points="120,120 30,80 120,200" fill="#F5C8D4" opacity="0.5" />
+              <polygon points="120,220 60,180 120,300" fill="#E5A9A9" opacity="0.4" />
+            </svg>
+          </div>
+
+          <p class="font-title font-bold text-xs tracking-[0.22em] text-brandTeal mb-2">
+            CILACAP — 20 SEPTEMBER 2026
+          </p>
+          <div class="mb-3">
+            <span class="font-title italic font-normal text-2xl text-brandTealDark">Cilacap</span><br />
+            <span class="font-title font-black text-6xl sm:text-7xl leading-[0.85] text-brandPink block">PLAYON</span>
+            <span class="font-title font-black text-2xl sm:text-3xl text-brandPink tracking-wide block mt-1">
+              5K FUN RUN
+            </span>
+          </div>
+          <p class="font-body text-sm text-brandTealDark font-semibold italic mb-6">
+            make your fun running on!
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <button
+              class="btn-go-daftar bg-brandPink hover:bg-[#D05570] text-brandWhite px-8 py-3.5 font-title font-extrabold text-base tracking-widest shadow-md transition-all cursor-pointer"
+            >
+              DAFTAR SEKARANG
+            </button>
+            <a
+              href="#tentang"
+              class="border-2 border-brandTeal text-brandTeal hover:bg-brandTeal hover:text-brandWhite px-8 py-3.5 font-title font-extrabold text-base tracking-widest transition-all cursor-pointer inline-block text-center"
+            >
+              SELENGKAPNYA
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pine tree decoration -->
+      <div class="overflow-hidden leading-[0] opacity-95">
+        <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="w-full h-[45px] display-block">
+          <g fill="#6BB1AD" opacity="0.25">
+            <path d="M 10,0 L 0,27 5,27 0,45 6,45 0,60 20,60 14,45 20,45 15,27 20,27 Z" />
+            <!-- Repeat shapes via loop pattern or offsets -->
+            <path d="M 52,0 L 42,27 47,27 42,45 48,45 42,60 62,60 56,45 62,45 57,27 62,27 Z" />
+            <path d="M 94,0 L 84,27 89,27 84,45 90,45 84,60 104,60 98,45 104,45 99,27 104,27 Z" />
+            <path d="M 136,0 L 126,27 131,27 126,45 132,45 126,60 146,60 140,45 146,45 141,27 146,27 Z" />
+            <path d="M 178,0 L 168,27 173,27 168,45 174,45 168,60 188,60 182,45 188,45 183,27 188,27 Z" />
+            <path d="M 220,0 L 210,27 215,27 210,45 216,45 210,60 230,60 224,45 230,45 225,27 230,27 Z" />
+            <path d="M 262,0 L 252,27 257,27 252,45 258,45 252,60 272,60 266,45 272,45 267,27 272,27 Z" />
+            <path d="M 304,0 L 294,27 299,27 294,45 300,45 294,60 314,60 308,45 314,45 309,27 314,27 Z" />
+            <path d="M 346,0 L 336,27 341,27 336,45 342,45 336,60 356,60 350,45 356,45 351,27 356,27 Z" />
+            <path d="M 388,0 L 378,27 383,27 378,45 384,45 378,60 398,60 392,45 398,45 393,27 398,27 Z" />
+            <path d="M 430,0 L 420,27 425,27 420,45 426,45 420,60 440,60 434,45 440,45 435,27 440,27 Z" />
+            <path d="M 472,0 L 462,27 467,27 462,45 468,45 462,60 482,60 476,45 482,45 477,27 482,27 Z" />
+            <path d="M 514,0 L 504,27 509,27 504,45 510,45 504,60 524,60 518,45 524,45 519,27 524,27 Z" />
+            <path d="M 556,0 L 546,27 551,27 546,45 552,45 546,60 566,60 560,45 566,45 561,27 566,27 Z" />
+            <path d="M 598,0 L 588,27 593,27 588,45 594,45 588,60 608,60 602,45 608,45 603,27 608,27 Z" />
+            <path d="M 640,0 L 630,27 635,27 630,45 636,45 630,60 650,60 644,45 650,45 645,27 650,27 Z" />
+            <path d="M 682,0 L 672,27 677,27 672,45 678,45 672,60 692,60 686,45 692,45 687,27 692,27 Z" />
+            <path d="M 724,0 L 714,27 719,27 714,45 720,45 714,60 734,60 728,45 734,45 729,27 734,27 Z" />
+            <path d="M 766,0 L 756,27 761,27 756,45 762,45 756,60 776,60 770,45 776,45 771,27 776,27 Z" />
+            <path d="M 808,0 L 798,27 803,27 798,45 804,45 798,60 818,60 812,45 818,45 813,27 818,27 Z" />
+            <path d="M 850,0 L 840,27 845,27 840,45 846,45 840,60 860,60 854,45 860,45 855,27 860,27 Z" />
+            <path d="M 892,0 L 882,27 887,27 882,45 888,45 882,60 902,60 896,45 902,45 897,27 902,27 Z" />
+            <path d="M 934,0 L 924,27 929,27 924,45 930,45 924,60 944,60 938,45 944,45 939,27 944,27 Z" />
+            <path d="M 976,0 L 966,27 971,27 966,45 972,45 966,60 986,60 980,45 986,45 981,27 986,27 Z" />
+            <path d="M 1018,0 L 1008,27 1013,27 1008,45 1014,45 1008,60 1028,60 1022,45 1028,45 1023,27 1028,27 Z" />
+            <path d="M 1060,0 L 1050,27 1055,27 1050,45 1056,45 1050,60 1070,60 1064,45 1070,45 1065,27 1070,27 Z" />
+            <path d="M 1102,0 L 1092,27 1097,27 1092,45 1098,45 1092,60 1112,60 1106,45 1112,45 1107,27 1112,27 Z" />
+            <path d="M 1144,0 L 1134,27 1139,27 1134,45 1140,45 1134,60 1154,60 1148,45 1154,45 1149,27 1154,27 Z" />
+            <path d="M 1186,0 L 1176,27 1181,27 1176,45 1182,45 1176,60 1196,60 1190,45 1196,45 1191,27 1196,27 Z" />
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- INFO CEPAT -->
+    <section class="bg-brandPink p-6">
+      <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-brandPink p-5 text-center">
+          <div class="text-2xl mb-1">📅</div>
+          <p class="font-title text-[10px] tracking-widest text-brandCream/80 font-bold mb-1">TANGGAL</p>
+          <p class="font-body font-extrabold text-sm text-brandWhite">Minggu, 20 Sept 2026</p>
+        </div>
+        <div class="bg-brandPink p-5 text-center">
+          <div class="text-2xl mb-1">⏰</div>
+          <p class="font-title text-[10px] tracking-widest text-brandCream/80 font-bold mb-1">WAKTU</p>
+          <p class="font-body font-extrabold text-sm text-brandWhite">05.30 – 10.30 WIB</p>
+        </div>
+        <div class="bg-brandPink p-5 text-center">
+          <div class="text-2xl mb-1">📍</div>
+          <p class="font-title text-[10px] tracking-widest text-brandCream/80 font-bold mb-1">LOKASI</p>
+          <p class="font-body font-extrabold text-sm text-brandWhite">Lap. Jati Persada, Cilacap</p>
+        </div>
+        <div class="bg-brandPink p-5 text-center">
+          <div class="text-2xl mb-1">🏃</div>
+          <p class="font-title text-[10px] tracking-widest text-brandCream/80 font-bold mb-1">JARAK</p>
+          <p class="font-body font-extrabold text-sm text-brandWhite">5 Kilometer</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TENTANG EVENT -->
+    <section id="tentang" class="py-20 px-6 max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-8 h-1 bg-brandPink rounded"></div>
+            <span class="font-title font-bold text-xs tracking-widest text-brandPink uppercase">TENTANG EVENT</span>
+          </div>
+          <h2 class="font-title font-black text-4xl sm:text-5xl uppercase leading-[1.05] text-[#2A2A2A] mb-6">
+            <span class="text-brandPink">CILACAP</span><br />PLAYON 5K<br /><span class="text-brandTeal">FUN RUN</span>
+          </h2>
+          <p class="text-sm text-brandDark/80 leading-relaxed mb-4">
+            Kesehatan merupakan salah satu aset paling berharga dalam kehidupan manusia. Di tengah kesibukan harian, menjaga kebugaran tubuh melalui olahraga yang teratur seringkali terlupakan.
+          </p>
+          <p class="text-sm text-brandDark/80 leading-relaxed mb-6">
+            Lari santai atau Fun Run merupakan salah satu jenis olahraga universal dan diminati oleh berbagai kalangan usia. Melalui kegiatan ini, kami berkomitmen untuk meningkatkan kesadaran gaya hidup sehat serta mempererat tali silaturahmi antar warga Cilacap dalam suasana penuh kegembiraan.
+          </p>
+          <button
+            class="btn-go-daftar bg-brandTeal hover:bg-brandTealDark text-brandWhite px-8 py-3.5 font-title font-extrabold text-sm tracking-widest shadow-md transition-all cursor-pointer"
+          >
+            IKUTI SEKARANG →
+          </button>
+        </div>
+        
+        <div class="relative">
+          <div class="absolute -top-3 -right-3 w-full h-full border-[3px] border-brandPinkLight z-0"></div>
+          <img
+            src="./assets/aset3.jpeg"
+            alt="Peserta mengenakan jersey Cilacap PLAYON"
+            class="w-full aspect-[4/3] object-cover relative z-10 shadow-sm"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- RANGKAIAN KEGIATAN -->
+    <section class="bg-brandCreamDark py-20 px-6 relative overflow-hidden">
+      <!-- Left & Right Geometric Accent -->
+      <div class="absolute top-0 left-0 w-24 h-full pointer-events-none overflow-hidden">
+        <svg width="120" height="100%" viewBox="0 0 120 400" preserveAspectRatio="none">
+          <polygon points="0,0 70,0 0,100" fill="#6BB1AD" opacity="0.7" />
+          <polygon points="0,80 50,0 0,0" fill="#E6748E" opacity="0.5" />
+          <polygon points="0,120 90,80 0,200" fill="#E5A9A9" opacity="0.5" />
+        </svg>
+      </div>
+
+      <div class="max-w-6xl mx-auto relative z-10">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-1 bg-brandPink rounded"></div>
+          <span class="font-title font-bold text-xs tracking-widest text-brandPink uppercase">RANGKAIAN KEGIATAN</span>
+        </div>
+        <h2 class="font-title font-black text-4xl sm:text-5xl uppercase leading-[1.05] text-[#2A2A2A] mb-10">
+          APA SAJA YANG <span class="text-brandPink">AKAN TERJADI?</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-brandWhite p-8 border-t-4 border-brandPink shadow-sm">
+            <div class="text-4xl mb-4">🏃‍♂️</div>
+            <h3 class="font-title font-black text-xl text-brandPink mb-3 uppercase">5K Fun Run</h3>
+            <p class="text-xs text-neutral-600 leading-relaxed">Lari santai menempuh rute sepanjang 5 kilometer mengitari area strategis Cilacap Tengah dengan titik start dan finish di Lapangan Jati Persada.</p>
+          </div>
+          <div class="bg-brandWhite p-8 border-t-4 border-brandTeal shadow-sm">
+            <div class="text-4xl mb-4">🛍️</div>
+            <h3 class="font-title font-black text-xl text-brandTeal mb-3 uppercase">Bazar UMKM Lokal</h3>
+            <p class="text-xs text-neutral-600 leading-relaxed">Penyediaan area khusus bagi pelaku usaha mikro, kecil, dan menengah lokal Cilacap untuk menjajakan produk kuliner dan kerajinan sehat.</p>
+          </div>
+          <div class="bg-brandWhite p-8 border-t-4 border-brandMelon shadow-sm">
+            <div class="text-4xl mb-4">🎵</div>
+            <h3 class="font-title font-black text-xl text-brandMelon mb-3 uppercase">Musik DJ & Doorprize</h3>
+            <p class="text-xs text-neutral-600 leading-relaxed">Pembagian berbagai macam hadiah menarik yang diselingi dengan penampilan musik DJ yang energik dan menghibur.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RUTE -->
+    <section id="rute" class="py-20 px-6 max-w-6xl mx-auto">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-8 h-1 bg-brandPink rounded"></div>
+        <span class="font-title font-bold text-xs tracking-widest text-brandPink uppercase">PETA RUTE</span>
+      </div>
+      <h2 class="font-title font-black text-4xl sm:text-5xl uppercase leading-[1.05] text-[#2A2A2A] mb-10">
+        RACE TRACK 
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+        <div class="relative">
+          <div class="absolute top-3 left-3 right-3 bottom-3 bg-brandPinkLight z-0"></div>
+          <img
+            src="./assets/rute.jpeg"
+            alt="Peta rute Cilacap Playon"
+            class="w-full relative z-10 shadow-sm border border-brandCreamDark"
+          />
+        </div>
+        <div>
+          <div class="bg-brandWhite p-6 border-l-4 border-brandPink mb-5 shadow-sm">
+            <p class="font-title font-bold text-[11px] tracking-widest text-brandPink mb-1">START / FINISH</p>
+            <p class="font-bold text-base">Lapangan Jati Persada</p>
+            <p class="text-xs text-neutral-500">Cilacap Tengah, Kab. Cilacap</p>
+          </div>
+          
+          <div class="space-y-3.5">
+            <div class="flex justify-between items-center py-2 border-b border-brandCreamDark text-sm">
+              <span class="font-title font-bold text-[10px] tracking-wider text-neutral-400">TOTAL JARAK</span>
+              <span class="font-bold text-brandDark">5 Kilometer</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-brandCreamDark text-sm">
+              <span class="font-title font-bold text-[10px] tracking-wider text-neutral-400">WATER STATION</span>
+              <span class="font-bold text-brandDark">Tersedia di tengah rute</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-brandCreamDark text-sm">
+              <span class="font-title font-bold text-[10px] tracking-wider text-neutral-400">MEDAN LINTASAN</span>
+              <span class="font-bold text-brandDark">Jalan Aspal</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-brandCreamDark text-sm">
+              <span class="font-title font-bold text-[10px] tracking-wider text-neutral-400">BATAS WAKTU (CUT OFF TIME)</span>
+              <span class="font-bold text-brandDark">Maksimal 2 Jam</span>
+            </div>
+          </div>
+          <p class="text-xs text-neutral-400 mt-4 leading-relaxed">* Rute lari bersifat final, penunjuk arah dan panitia marshal akan siaga di titik persimpangan utama.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FASILITAS -->
+    <section id="fasilitas" class="bg-brandTeal py-20 px-6 relative overflow-hidden">
+      <!-- Pine background -->
+      <div class="absolute bottom-0 left-0 right-0 overflow-hidden leading-[0] opacity-15">
+        <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="w-full h-[50px] display-block">
+          <g fill="#FFFFFF">
+            <path d="M 10,0 L 0,27 5,27 0,45 6,45 0,60 20,60 14,45 20,45 15,27 20,27 Z" />
+            <path d="M 52,0 L 42,27 47,27 42,45 48,45 42,60 62,60 56,45 62,45 57,27 62,27 Z" />
+            <path d="M 94,0 L 84,27 89,27 84,45 90,45 84,60 104,60 98,45 104,45 99,27 104,27 Z" />
+            <path d="M 136,0 L 126,27 131,27 126,45 132,45 126,60 146,60 140,45 146,45 141,27 146,27 Z" />
+            <path d="M 178,0 L 168,27 173,27 168,45 174,45 168,60 188,60 182,45 188,45 183,27 188,27 Z" />
+            <path d="M 220,0 L 210,27 215,27 210,45 216,45 210,60 230,60 224,45 230,45 225,27 230,27 Z" />
+            <path d="M 262,0 L 252,27 257,27 252,45 258,45 252,60 272,60 266,45 272,45 267,27 272,27 Z" />
+            <path d="M 304,0 L 294,27 299,27 294,45 300,45 294,60 314,60 308,45 314,45 309,27 314,27 Z" />
+            <path d="M 346,0 L 336,27 341,27 336,45 342,45 336,60 356,60 350,45 356,45 351,27 356,27 Z" />
+            <path d="M 388,0 L 378,27 383,27 378,45 384,45 378,60 398,60 392,45 398,45 393,27 398,27 Z" />
+            <path d="M 430,0 L 420,27 425,27 420,45 426,45 420,60 440,60 434,45 440,45 435,27 440,27 Z" />
+            <path d="M 472,0 L 462,27 467,27 462,45 468,45 462,60 482,60 476,45 482,45 477,27 482,27 Z" />
+            <path d="M 514,0 L 504,27 509,27 504,45 510,45 504,60 524,60 518,45 524,45 519,27 524,27 Z" />
+            <path d="M 556,0 L 546,27 551,27 546,45 552,45 546,60 566,60 560,45 566,45 561,27 566,27 Z" />
+            <path d="M 598,0 L 588,27 593,27 588,45 594,45 588,60 608,60 602,45 608,45 603,27 608,27 Z" />
+            <path d="M 640,0 L 630,27 635,27 630,45 636,45 630,60 650,60 644,45 650,45 645,27 650,27 Z" />
+            <path d="M 682,0 L 672,27 677,27 672,45 678,45 672,60 692,60 686,45 692,45 687,27 692,27 Z" />
+            <path d="M 724,0 L 714,27 719,27 714,45 720,45 714,60 734,60 728,45 734,45 729,27 734,27 Z" />
+            <path d="M 766,0 L 756,27 761,27 756,45 762,45 756,60 776,60 770,45 776,45 771,27 776,27 Z" />
+            <path d="M 808,0 L 798,27 803,27 798,45 804,45 798,60 818,60 812,45 818,45 813,27 818,27 Z" />
+            <path d="M 850,0 L 840,27 845,27 840,45 846,45 840,60 860,60 854,45 860,45 855,27 860,27 Z" />
+            <path d="M 892,0 L 882,27 887,27 882,45 888,45 882,60 902,60 896,45 902,45 897,27 902,27 Z" />
+            <path d="M 934,0 L 924,27 929,27 924,45 930,45 924,60 944,60 938,45 944,45 939,27 944,27 Z" />
+            <path d="M 976,0 L 966,27 971,27 966,45 972,45 966,60 986,60 980,45 986,45 981,27 986,27 Z" />
+            <path d="M 1018,0 L 1008,27 1013,27 1008,45 1014,45 1008,60 1028,60 1022,45 1028,45 1023,27 1028,27 Z" />
+            <path d="M 1060,0 L 1050,27 1055,27 1050,45 1056,45 1050,60 1070,60 1064,45 1070,45 1065,27 1070,27 Z" />
+            <path d="M 1102,0 L 1092,27 1097,27 1092,45 1098,45 1092,60 1112,60 1106,45 1112,45 1107,27 1112,27 Z" />
+            <path d="M 1144,0 L 1134,27 1139,27 1134,45 1140,45 1134,60 1154,60 1148,45 1154,45 1149,27 1154,27 Z" />
+            <path d="M 1186,0 L 1176,27 1181,27 1176,45 1182,45 1176,60 1196,60 1190,45 1196,45 1191,27 1196,27 Z" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="max-w-6xl mx-auto relative z-10">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-1 bg-[#FFFFFF] rounded"></div>
+          <span class="font-title font-bold text-xs tracking-widest text-[#FFFFFF]/80 uppercase">FASILITAS PESERTA</span>
+        </div>
+        <h2 class="font-title font-black text-4xl sm:text-5xl uppercase leading-[1.05] text-brandWhite mb-12">
+          YANG AKAN <span class="text-brandCream">KAMU DAPATKAN</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-brandWhite/10 p-4 border border-brandWhite/20 shadow-sm transition-all hover:bg-brandWhite/15">
+              <span class="text-2xl">👕</span>
+              <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">Jersey Eksklusif</p>
+              <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Bahan nyaman & menyerap keringat.</p>
+            </div>
+            <div class="bg-brandWhite/10 p-4 border border-brandWhite/20 shadow-sm transition-all hover:bg-brandWhite/15">
+              <span class="text-2xl">🏅</span>
+              <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">Medali Finisher</p>
+              <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Diberikan untuk seluruh pelari yang mencapai finish.</p>
+            </div>
+            <div class="bg-brandWhite/10 p-4 border border-brandWhite/20 shadow-sm transition-all hover:bg-brandWhite/15">
+              <span class="text-2xl">🏷️</span>
+              <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">Nomor BIB / Dada</p>
+              <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Custom nama sesuai pilihan peserta.</p>
+            </div>
+            <div class="bg-brandWhite/10 p-4 border border-brandWhite/20 shadow-sm transition-all hover:bg-brandWhite/15">
+              <span class="text-2xl">💧</span>
+              <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">Air Mineral</p>
+              <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Hidrasi optimal di setiap water station & finish.</p>
+            </div>
+            <div class="bg-brandWhite/10 p-4 border border-brandWhite/20 shadow-sm transition-all hover:bg-brandWhite/15">
+              <span class="text-2xl">⚡</span>
+              <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">Minuman Isotonik</p>
+              <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Kembalikan energi dengan cepat di track.</p>
+            </div>
+            <div class="bg-brandWhite/10 p-4 border border-brandWhite/20 shadow-sm transition-all hover:bg-brandWhite/15">
+              <span class="text-2xl">🍱</span>
+              <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">Snack Box</p>
+              <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Nutrisi tambahan setelah mencapai garis finish.</p>
+            </div>
+            <div class="bg-brandWhite/10 p-4 border border-brandWhite/20 shadow-sm transition-all hover:bg-brandWhite/15">
+              <span class="text-2xl">🎁</span>
+              <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">Produk Sponsor</p>
+              <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Bonus menarik dari para mitra eksklusif.</p>
+            </div>
+            <div class="bg-brandWhite/10 p-4 border border-brandWhite/20 shadow-sm transition-all hover:bg-brandWhite/15">
+              <span class="text-2xl">🛍️</span>
+              <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">Goodie Bag</p>
+              <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Tas eksklusif event Cilacap Playon.</p>
+            </div>
+            <div class="bg-brandWhite/10 p-4 border border-brandWhite/20 shadow-sm transition-all hover:bg-brandWhite/15">
+              <span class="text-2xl">🍏</span>
+              <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">Refreshment Area</p>
+              <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Akses masuk ke area penyegaran khusus peserta.</p>
+            </div>
+            <div class="bg-brandWhite/10 p-4 border border-brandWhite/20 shadow-sm transition-all hover:bg-brandWhite/15">
+              <span class="text-2xl">📸</span>
+              <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">File Dokumentasi</p>
+              <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Foto & dokumentasi kegiatan gratis yang bisa diunduh.</p>
+            </div>
+          </div>
+          <div>
+            <img
+              src="./assets/fasilitas.jpeg"
+              alt="Jersey dan Medal finisher"
+              class="w-full aspect-[4/3] object-cover border-4 border-brandCream shadow-lg"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HARGA TIKET & DAFTAR -->
+    <section id="daftar" class="relative bg-brandCreamDark bg-cover bg-center py-20 px-6" style="background-image: var(--landing-ticket-bg);">
+      <div class="absolute inset-0 bg-brandCreamDark/85 pointer-events-none"></div>
+      <div class="relative max-w-6xl mx-auto flex flex-col items-center">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-1 bg-brandPink rounded"></div>
+          <span class="font-title font-bold text-xs tracking-widest text-brandPink uppercase">REGISTRASI</span>
+        </div>
+        <h2 class="font-title font-black text-4xl sm:text-5xl uppercase leading-none text-center text-[#2A2A2A] mb-12">
+          HARGA TIKET & <span class="text-brandPink">PENDAFTARAN</span>
+        </h2>
+
+        <!-- TICKET BOX CARD -->
+        <div class="relative bg-brandWhite p-8 border border-brandPinkLight max-w-md w-full shadow-lg overflow-hidden">
+          <!-- Top Accent Ribbon -->
+          <div class="absolute top-0 left-0 w-full h-1.5 bg-brandPink"></div>
+          
+          <div class="text-center mb-6">
+            <span id="landing-promo-badge" class="bg-brandPinkLight text-brandPink font-title font-black text-xs px-3 py-1 uppercase tracking-wider">
+              PROMO EARLY BIRD
+            </span>
+            <h3 class="font-title font-black text-3xl text-brandDark uppercase mt-4">5K FUN RUN</h3>
+            <p class="text-xs text-neutral-400 mt-1">Tersedia kuota terbatas hingga 31 Agustus 2026</p>
+          </div>
+
+          <div class="border-y border-brandCreamDark py-6 mb-6 flex flex-col items-center">
+            <div class="flex items-baseline gap-2.5">
+              <span id="landing-promo-price" class="font-title font-black text-4xl text-brandPink">Rp 85.000</span>
+              <span id="landing-normal-price" class="text-sm text-neutral-400 line-through">Rp 100.000</span>
+            </div>
+            <p id="landing-savings-text" class="text-[11px] text-brandTealDark font-semibold mt-1">Hemat Rp 15.000 dari harga tiket normal</p>
+          </div>
+
+          <button
+            class="btn-go-daftar w-full bg-brandPink hover:bg-[#D05570] text-brandWhite py-4 font-title font-extrabold text-base tracking-widest transition-colors cursor-pointer shadow-sm text-center uppercase"
+          >
+            AMBIL TIKET SEKARANG
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="kontak" class="border-t border-brandPinkLight">
+      <div class="max-w-6xl mx-auto px-6 py-20">
+        <div class="flex items-center gap-3 mb-10">
+          <div class="w-8 h-1 bg-brandPink rounded"></div>
+          <span class="font-title font-bold text-xs tracking-widest text-brandPink uppercase">KONTAK & DUKUNGAN</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-brandWhite p-6 border-l-4 border-brandTeal shadow-sm">
+            <div class="text-4xl mb-3">💬</div>
+            <p class="font-title text-[10px] tracking-widest text-brandTeal font-bold mb-1">WHATSAPP</p>
+            <p class="font-semibold text-base text-brandDark">+62 812-3456-7890</p>
+            <p class="text-[11px] text-neutral-500 mt-1">Panitia pendaftaran (Cilacap)</p>
+          </div>
+          <div class="bg-brandWhite p-6 border-l-4 border-brandPink shadow-sm">
+            <div class="text-4xl mb-3">✉️</div>
+            <p class="font-title text-[10px] tracking-widest text-brandPink font-bold mb-1">EMAIL</p>
+            <p class="font-semibold text-base text-brandDark">panitia@cilacapplayon.id</p>
+            <p class="text-[11px] text-neutral-500 mt-1">Pertanyaan / kerja sama sponsor</p>
+          </div>
+          <div class="bg-brandWhite p-6 border-l-4 border-brandMelon shadow-sm">
+            <div class="text-4xl mb-3">📸</div>
+            <p class="font-title text-[10px] tracking-widest text-brandMelon font-bold mb-1">INSTAGRAM</p>
+            <p class="font-semibold text-base text-brandDark">@cilacapplayon</p>
+            <p class="text-[11px] text-neutral-500 mt-1">Update & pengumuman terkini</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border-t border-brandPinkLight/30 py-6 text-center text-[10px] font-title tracking-[0.15em] text-neutral-500 bg-[#E8E7D3]/40">
+        © 2026 CILACAP PLAYON · POWERED BY ARKASA CREATIVE PARTNER
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= REGISTRATION SECTION ================= -->
+  <div id="registration-section" class="hidden relative bg-brandCream bg-halftone min-h-screen pb-32 overflow-hidden">
+    <!-- Left & Right Geometric Accent (from aset1.jpeg style) -->
+    <div class="absolute top-0 left-0 w-32 sm:w-48 h-full pointer-events-none overflow-hidden z-0 opacity-40">
+      <svg width="100%" height="100%" viewBox="0 0 160 1200" preserveAspectRatio="none">
+        <polygon points="0,0 160,0 0,330" fill="#6BB1AD" />
+        <polygon points="0,0 90,0 0,165" fill="#A7BCBD" />
+        <polygon points="0,300 120,435 0,570" fill="#E6748E" />
+        <polygon points="0,480 70,525 0,630" fill="#E5A9A9" />
+      </svg>
+    </div>
+    <div class="absolute top-0 right-0 w-32 sm:w-48 h-full pointer-events-none overflow-hidden z-0 opacity-40">
+      <svg width="100%" height="100%" viewBox="0 0 160 1200" preserveAspectRatio="none">
+        <polygon points="160,0 0,0 160,270" fill="#E6748E" />
+        <polygon points="160,0 70,0 160,135" fill="#F5C8D4" />
+        <polygon points="160,225 40,360 160,495" fill="#E5A9A9" />
+        <polygon points="160,420 90,480 160,585" fill="#6BB1AD" />
+      </svg>
+    </div>
+
+    <!-- Header -->
+    <div class="bg-brandTeal px-6 relative z-10">
+      <div class="max-w-4xl mx-auto flex items-center justify-between h-[56px]">
+        <button
+          id="reg-back-btn"
+          class="bg-transparent border-none text-brandWhite/80 hover:text-brandWhite font-title font-bold text-xs tracking-widest cursor-pointer flex items-center gap-2"
+        >
+          ← KEMBALI
+        </button>
+        <img src="./design-source/assets/logo.jpeg" alt="Logo Cilacap Playon" class="h-10 w-auto object-contain" />
+      </div>
+    </div>
+
+    <!-- Form Container -->
+    <div class="max-w-3xl mx-auto px-6 py-12 relative z-10">
+      <div class="mb-10">
+        <h1 class="font-title font-black text-4xl sm:text-5xl uppercase leading-[0.95] text-brandDark">
+          <span class="text-brandTeal text-xl sm:text-2xl block tracking-widest font-extrabold mb-1">FORMULIR PENDAFTARAN</span>
+          5K <span class="text-brandPink bg-gradient-to-r from-brandPink to-brandMelon bg-clip-text text-transparent">FUN RUN</span>
+        </h1>
+        <p class="text-xs text-neutral-500 mt-3">Lengkapi semua kolom bertanda <span class="text-brandPink">*</span> untuk mengaktifkan tombol daftar.</p>
+      </div>
+
+      <form id="reg-form" class="space-y-6 relative">
+        <div class="bg-brandWhite p-8 shadow-sm border border-brandPinkLight/30">
+          <div class="flex items-center gap-3 mb-6 pb-3 border-b border-brandPinkLight">
+            <div class="w-[30px] h-[30px] bg-brandPink flex items-center justify-center text-brandWhite font-title font-black text-base">1</div>
+            <h3 class="font-title font-black text-base tracking-wider uppercase text-brandDark">DATA DIRI UTAMA</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-4">
+            <div>
+              <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Nama Lengkap <span class="text-brandPink">*</span></label>
+              <input type="text" id="input-name" required placeholder="Sesuai KTP/Paspor" class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors" />
+            </div>
+            <div>
+              <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Tanggal Lahir</label>
+              <input type="date" id="input-dob" class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors" />
+              <p id="age-display-text" class="text-xs text-brandTeal font-bold mt-1.5"></p>
+            </div>
+          </div>
+          <div>
+            <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Jenis Kelamin <span class="text-brandPink">*</span></label>
+            <select id="select-gender" required class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors cursor-pointer">
+              <option value="" disabled selected>Pilih...</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bg-brandWhite p-8 shadow-sm border border-brandPinkLight/30">
+          <div class="flex items-center gap-3 mb-6 pb-3 border-b border-brandPinkLight">
+            <div class="w-[30px] h-[30px] bg-brandPink flex items-center justify-center text-brandWhite font-title font-black text-base">2</div>
+            <h3 class="font-title font-black text-base tracking-wider uppercase text-brandDark">KONTAK & KOMUNIKASI</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-4">
+            <div>
+              <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Alamat Email <span class="text-brandPink">*</span></label>
+              <input type="email" id="input-email" required placeholder="email@contoh.com" class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors" />
+            </div>
+            <div>
+              <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Nomor HP / WhatsApp <span class="text-brandPink">*</span></label>
+              <input type="tel" id="input-phone" required inputmode="numeric" pattern="[0-9]*" placeholder="08xxxxxxxxxx" class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors" />
+            </div>
+          </div>
+          <div>
+            <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Alamat Domisili</label>
+            <input type="text" id="input-domicile" placeholder="Kota / Kecamatan asal" class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors" />
+          </div>
+        </div>
+
+        <div class="bg-brandWhite p-8 shadow-sm border border-brandPinkLight/30">
+          <div class="flex items-center gap-3 mb-6 pb-3 border-b border-brandPinkLight">
+            <div class="w-[30px] h-[30px] bg-brandPink flex items-center justify-center text-brandWhite font-title font-black text-base">3</div>
+            <h3 class="font-title font-black text-base tracking-wider uppercase text-brandDark">INFORMASI MEDIS & KONTAK DARURAT</h3>
+          </div>
+          <div class="bg-[#FFF8F9] border border-brandPinkLight px-4 py-3 text-xs text-neutral-500 mb-6 leading-relaxed">
+            ⚠️ Informasi medis ini penting untuk keselamatan Anda selama pelaksanaan fun run di lapangan.
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-4">
+            <div>
+              <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Nama Kontak Darurat <span class="text-brandPink">*</span></label>
+              <input type="text" id="input-emergency-name" required placeholder="Nama lengkap" class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors" />
+            </div>
+            <div>
+              <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Hubungan Kontak Darurat <span class="text-brandPink">*</span></label>
+              <input type="text" id="input-emergency-relation" required placeholder="Orang tua / Suami/Istri / Saudara / dll" class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors" />
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">No. Telepon Kontak Darurat <span class="text-brandPink">*</span></label>
+              <input type="tel" id="input-emergency-phone" required inputmode="numeric" pattern="[0-9]*" placeholder="08xxxxxxxxxx" class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors" />
+            </div>
+            <div>
+              <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Golongan Darah <span class="text-brandPink">*</span></label>
+              <select id="select-blood-type" required class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors cursor-pointer">
+                <option value="" disabled selected>Pilih...</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="AB">AB</option>
+                <option value="O">O</option>
+                <option value="Tidak Tahu">Tidak Tahu</option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-4">
+            <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Riwayat Medis / Alergi <span class="text-neutral-300 text-[10px] font-normal">(opsional)</span></label>
+            <textarea id="input-medical-history" placeholder="Kosongkan jika tidak ada. Riwayat asma, alergi obat, jantung, dll." class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors resize-y h-24"></textarea>
+          </div>
+        </div>
+
+        <div class="bg-brandWhite p-8 shadow-sm border border-brandPinkLight/30">
+          <div class="flex items-center gap-3 mb-6 pb-3 border-b border-brandPinkLight">
+            <div class="w-[30px] h-[30px] bg-brandPink flex items-center justify-center text-brandWhite font-title font-black text-base">4</div>
+            <h3 class="font-title font-black text-base tracking-wider uppercase text-brandDark">ATRIBUT</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Ukuran Jersey</label>
+              <select id="select-jersey-size" required class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors cursor-pointer">
+                <option value="" disabled selected>Pilih...</option>
+                <option value="S">S (Lebar: 46cm, Panjang: 66cm)</option>
+                <option value="M">M (Lebar: 49cm, Panjang: 69cm)</option>
+                <option value="L">L (Lebar: 52cm, Panjang: 72cm)</option>
+                <option value="XL">XL (Lebar: 55cm, Panjang: 75cm)</option>
+                <option value="2XL">2XL (Lebar: 58cm, Panjang: 78cm)</option>
+                <option value="3XL">3XL (Lebar: 61cm, Panjang: 81cm)</option>
+                <option value="4XL">4XL (Lebar: 69cm, Panjang: 82cm)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-title font-bold text-[11px] tracking-[0.14em] text-neutral-400 mb-1.5 uppercase">Nama di BIB <span class="text-neutral-300 text-[10px] font-normal">(opsional)</span></label>
+              <input type="text" id="input-bib-name" placeholder="Nama panggilan pelari" class="w-full bg-brandWhite border-2 border-brandCreamDark focus:border-brandPink text-brandDark px-4 py-2.5 text-sm outline-none transition-colors" />
+              <p id="bib-preview-text" class="text-xs text-brandTeal font-bold mt-1.5"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-brandWhite p-8 shadow-sm border border-brandPinkLight/30">
+          <div class="flex items-center gap-3 mb-6 pb-3 border-b border-brandPinkLight">
+            <div class="w-[30px] h-[30px] bg-brandPink flex items-center justify-center text-brandWhite font-title font-black text-base">5</div>
+            <h3 class="font-title font-black text-base tracking-wider uppercase text-brandDark">RINGKASAN TRANSAKSI</h3>
+          </div>
+          <div class="space-y-3.5">
+            <div class="flex justify-between items-center text-sm py-1 border-b border-brandCreamDark">
+              <span class="text-neutral-500">Jenis Promosi</span>
+              <span id="summary-promo-type" class="font-title font-semibold text-brandDark">EARLY BIRD</span>
+            </div>
+            <div class="flex justify-between items-center py-3">
+              <span class="font-title font-black text-xs tracking-wider text-brandDark">TOTAL YANG DIBAYARKAN</span>
+              <span id="summary-total" class="font-title font-black text-2xl text-brandPink">Rp 85.000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-brandWhite p-8 shadow-sm border border-brandPinkLight/30">
+          <div class="flex items-center gap-3 mb-6 pb-3 border-b border-brandPinkLight">
+            <div class="w-[30px] h-[30px] bg-brandPink flex items-center justify-center text-brandWhite font-title font-black text-base">6</div>
+            <h3 class="font-title font-black text-base tracking-wider uppercase text-brandDark">PEMBAYARAN</h3>
+          </div>
+          <div class="flex flex-col items-center gap-6 mb-6">
+            <!-- QRIS Payment (Atas) -->
+            <div class="bg-white p-6 sm:p-8 border border-brandCreamDark shadow-sm flex flex-col justify-center items-center text-center w-full max-w-md">
+              <img id="qris-image" src="design-source/assets/qrnormal.jpeg" alt="QRIS Pembayaran" class="w-[240px] h-[240px] sm:w-[280px] sm:h-[280px] object-contain mx-auto" />
+              <p class="text-xs font-title font-bold tracking-widest text-[#2A2A2A] mt-4">QRIS · CILACAP PLAYON 2026</p>
+            </div>
+
+            <!-- Manual Bank Transfer (Bawah) -->
+            <div class="w-full max-w-md bg-[#FFF8F9] border border-brandPinkLight p-6 sm:p-8 text-sm text-brandDark shadow-sm flex flex-col items-center text-center">
+              <p class="font-title font-bold text-xs tracking-[0.18em] uppercase text-brandDark mb-4">Transfer Manual / Rekening Resmi</p>
+              <div class="space-y-3 text-xs text-brandDark/90 mb-6 w-full">
+                <p><span class="font-semibold text-neutral-400">BANK:</span> <span class="font-bold text-brandDark">BCA</span></p>
+                <p><span class="font-semibold text-neutral-400">NO. REKENING:</span> <br><span id="payment-account-number" class="font-black text-brandPink text-xl tracking-wider">0961-4810-31</span></p>
+                <p><span class="font-semibold text-neutral-400">ATAS NAMA:</span> <br><span class="font-bold text-brandDark uppercase">Mohamad Pujiana Setiawan</span></p>
+              </div>
+              <button type="button" id="btn-copy-bank" class="w-full max-w-[280px] inline-flex items-center justify-center gap-2 bg-brandTeal hover:bg-brandTealDark text-brandWhite px-5 py-3 font-title font-extrabold text-xs tracking-widest transition-colors cursor-pointer uppercase shadow-sm">
+                📋 SALIN NOMOR REKENING
+              </button>
+              <p id="bank-copy-feedback" class="mt-3 text-[10px] text-brandTealDark hidden">Nomor rekening disalin ke clipboard.</p>
+            </div>
+          </div>
+          <input type="file" id="proof-file-input" accept="image/*,application/pdf" class="hidden" />
+          <div id="upload-placeholder" class="border-2 border-dashed border-brandCreamDark hover:border-brandPink bg-transparent hover:bg-brandCreamDark/30 p-8 flex flex-col items-center justify-center gap-3 cursor-pointer transition-colors duration-200">
+            <svg class="w-8 h-8 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            <span class="font-title font-bold text-xs tracking-wider text-brandTealDark">KLIK UNTUK UNGGAH BUKTI PEMBAYARAN <span class="text-brandPink">*</span></span>
+            <span class="text-[10px] text-neutral-400">JPG, PNG, atau PDF · Maks. 5 MB</span>
+          </div>
+          <div id="file-preview-container" class="hidden border border-brandCreamDark p-4 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <img id="file-preview-img" src="" alt="Bukti Transfer" class="w-12 h-12 object-cover border border-brandCreamDark hidden" />
+              <div>
+                <p id="file-name-text" class="text-sm font-semibold text-brandDark truncate max-w-[200px] sm:max-w-xs"></p>
+                <p class="text-[11px] text-brandTeal">File berhasil dipilih</p>
+              </div>
+            </div>
+            <button type="button" id="remove-file-btn" class="text-xs text-brandPink hover:underline font-semibold cursor-pointer">Hapus</button>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          id="submit-reg-btn"
+          disabled
+          class="group w-full bg-gradient-to-r from-brandPink to-brandMelon hover:from-[#D05570] hover:to-[#D58C8C] disabled:from-neutral-300 disabled:to-neutral-300 disabled:text-neutral-500 disabled:cursor-not-allowed text-brandWhite py-5 px-8 font-title font-black tracking-[0.22em] text-xl transition-all duration-300 cursor-pointer text-center shadow-md relative overflow-hidden flex items-center justify-center hover:shadow-lg uppercase"
+        >
+          <!-- Halftone Dot Texture -->
+          <div class="absolute inset-y-0 right-0 w-40 bg-halftone opacity-20 pointer-events-none"></div>
+          
+          <!-- Geometric Ornaments Left -->
+          <div class="absolute inset-y-0 left-0 w-12 pointer-events-none overflow-hidden opacity-40">
+            <svg class="w-full h-full" viewBox="0 0 48 80" preserveAspectRatio="none">
+              <polygon points="0,0 36,0 0,80" fill="#6BB1AD" />
+              <polygon points="0,0 16,0 0,40" fill="#EDECDB" />
+            </svg>
+          </div>
+          
+          <!-- Geometric Ornaments Right -->
+          <div class="absolute inset-y-0 right-0 w-20 pointer-events-none overflow-hidden opacity-30">
+            <svg class="w-full h-full" viewBox="0 0 80 80" preserveAspectRatio="none">
+              <polygon points="80,0 20,80 80,80" fill="#EDECDB" />
+              <polygon points="80,30 40,80 80,80" fill="#6BB1AD" />
+            </svg>
+          </div>
+
+          <span class="relative z-10 flex items-center gap-2">
+            <span>DAFTAR SEKARANG</span>
+            <span class="text-xl leading-none transition-transform duration-300 group-hover:translate-x-2">→</span>
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Pine tree footer decoration (from aset1.jpeg/Landing footer style) -->
+    <div class="absolute bottom-0 left-0 right-0 overflow-hidden leading-[0] opacity-35 pointer-events-none z-0">
+      <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="w-full h-[55px] display-block">
+        <g fill="#6BB1AD">
+          <path d="M 10,0 L 0,27 5,27 0,45 6,45 0,60 20,60 14,45 20,45 15,27 20,27 Z" />
+          <path d="M 52,0 L 42,27 47,27 42,45 48,45 42,60 62,60 56,45 62,45 57,27 62,27 Z" />
+          <path d="M 94,0 L 84,27 89,27 84,45 90,45 84,60 104,60 98,45 104,45 99,27 104,27 Z" />
+          <path d="M 136,0 L 126,27 131,27 126,45 132,45 126,60 146,60 140,45 146,45 141,27 146,27 Z" />
+          <path d="M 178,0 L 168,27 173,27 168,45 174,45 168,60 188,60 182,45 188,45 183,27 188,27 Z" />
+          <path d="M 220,0 L 210,27 215,27 210,45 216,45 210,60 230,60 224,45 230,45 225,27 230,27 Z" />
+          <path d="M 262,0 L 252,27 257,27 252,45 258,45 252,60 272,60 266,45 272,45 267,27 272,27 Z" />
+          <path d="M 304,0 L 294,27 299,27 294,45 300,45 294,60 314,60 308,45 314,45 309,27 314,27 Z" />
+          <path d="M 346,0 L 336,27 341,27 336,45 342,45 336,60 356,60 350,45 356,45 351,27 356,27 Z" />
+          <path d="M 388,0 L 378,27 383,27 378,45 384,45 378,60 398,60 392,45 398,45 393,27 398,27 Z" />
+          <path d="M 430,0 L 420,27 425,27 420,45 426,45 420,60 440,60 434,45 440,45 435,27 440,27 Z" />
+          <path d="M 472,0 L 462,27 467,27 462,45 468,45 462,60 482,60 476,45 482,45 477,27 482,27 Z" />
+          <path d="M 514,0 L 504,27 509,27 504,45 510,45 504,60 524,60 518,45 524,45 519,27 524,27 Z" />
+          <path d="M 556,0 L 546,27 551,27 546,45 552,45 546,60 566,60 560,45 566,45 561,27 566,27 Z" />
+          <path d="M 598,0 L 588,27 593,27 588,45 594,45 588,60 608,60 602,45 608,45 603,27 608,27 Z" />
+          <path d="M 640,0 L 630,27 635,27 630,45 636,45 630,60 650,60 644,45 650,45 645,27 650,27 Z" />
+          <path d="M 682,0 L 672,27 677,27 672,45 678,45 672,60 692,60 686,45 692,45 687,27 692,27 Z" />
+          <path d="M 724,0 L 714,27 719,27 714,45 720,45 714,60 734,60 728,45 734,45 729,27 734,27 Z" />
+          <path d="M 766,0 L 756,27 761,27 756,45 762,45 756,60 776,60 770,45 776,45 771,27 776,27 Z" />
+          <path d="M 808,0 L 798,27 803,27 798,45 804,45 798,60 818,60 812,45 818,45 813,27 818,27 Z" />
+          <path d="M 850,0 L 840,27 845,27 840,45 846,45 840,60 860,60 854,45 860,45 855,27 860,27 Z" />
+          <path d="M 892,0 L 882,27 887,27 882,45 888,45 882,60 902,60 896,45 902,45 897,27 902,27 Z" />
+          <path d="M 934,0 L 924,27 929,27 924,45 930,45 924,60 944,60 938,45 944,45 939,27 944,27 Z" />
+          <path d="M 976,0 L 966,27 971,27 966,45 972,45 966,60 986,60 980,45 986,45 981,27 986,27 Z" />
+          <path d="M 1018,0 L 1008,27 1013,27 1008,45 1014,45 1008,60 1028,60 1022,45 1028,45 1023,27 1028,27 Z" />
+          <path d="M 1060,0 L 1050,27 1055,27 1050,45 1056,45 1050,60 1070,60 1064,45 1070,45 1065,27 1070,27 Z" />
+          <path d="M 1102,0 L 1092,27 1097,27 1092,45 1098,45 1092,60 1112,60 1106,45 1112,45 1107,27 1112,27 Z" />
+          <path d="M 1144,0 L 1134,27 1139,27 1134,45 1140,45 1134,60 1154,60 1148,45 1154,45 1149,27 1154,27 Z" />
+          <path d="M 1186,0 L 1176,27 1181,27 1176,45 1182,45 1176,60 1196,60 1190,45 1196,45 1191,27 1196,27 Z" />
+        </g>
+      </svg>
+    </div>
+  </div>
+
+
+  <!-- ================= CONFIRMATION SECTION ================= -->
+  <div id="confirmation-section" class="hidden">
+    <!-- Header -->
+    <div class="bg-brandTeal px-6">
+      <div class="max-w-2xl mx-auto flex items-center justify-center h-[56px]">
+        <img src="./design-source/assets/logo.jpeg" alt="Logo Cilacap Playon" class="h-10 w-auto object-contain" />
+      </div>
+    </div>
+
+    <div class="max-w-2xl mx-auto px-6 py-16 flex flex-col items-center">
+      
+      <!-- Success Checked Icon -->
+      <div class="w-20 h-20 bg-brandTeal flex items-center justify-center rounded-full mb-8 shadow-md border-8 border-brandPinkLight">
+        <svg class="w-10 h-10 text-brandWhite" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+
+      <div class="text-center mb-8">
+        <p class="font-title font-bold text-xs tracking-[0.25em] text-brandTeal mb-2">PENDAFTARAN BERHASIL 🎉</p>
+        <h2 class="font-title font-black text-4xl sm:text-5xl uppercase leading-tight mb-4 text-brandDark">
+          SELAMAT, <br><span id="success-greet-name" class="text-brandPink">-!</span>
+        </h2>
+        <p class="text-xs text-neutral-500 max-w-[440px] mx-auto leading-relaxed">
+          Pendaftaran kamu telah kami terima. Panitia akan memverifikasi bukti pembayaran dan mengirimkan konfirmasi ke WhatsApp kamu.
+        </p>
+      </div>
+
+      <!-- BIB CARD DISPLAY -->
+      <div class="w-full mb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-7 h-[3px] bg-brandPink"></div>
+          <span class="font-title font-bold text-xs tracking-wider text-brandPink uppercase">NOMOR BIB KAMU</span>
+        </div>
+        
+        <!-- BIBCard SVG Template -->
+        <div class="w-full max-w-[480px] mx-auto drop-shadow-xl">
+          <svg viewBox="0 0 480 340" width="100%" xmlns="http://www.w3.org/2000/svg" class="block">
+            <defs>
+              <pattern id="svg-dots" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+                <circle cx="7" cy="7" r="2" fill="#C8B89A" opacity="0.35" />
+              </pattern>
+              <clipPath id="svg-cardClip">
+                <rect x="0" y="0" width="480" height="340" rx="6" ry="6" />
+              </clipPath>
+            </defs>
+            <rect x="0" y="0" width="480" height="340" rx="6" fill="#EDECDB" clip-path="url(#svg-cardClip)" />
+            <rect x="200" y="0" width="280" height="160" fill="url(#svg-dots)" clip-path="url(#svg-cardClip)" />
+            
+            <polygon points="0,0 110,0 0,180" fill="#6BB1AD" opacity="0.85" clip-path="url(#svg-cardClip)" />
+            <polygon points="0,0 60,0 0,80" fill="#A7BCBD" opacity="0.6" clip-path="url(#svg-cardClip)" />
+            <polygon points="0,160 80,220 0,280" fill="#E6748E" opacity="0.75" clip-path="url(#svg-cardClip)" />
+            <polygon points="0,240 50,260 0,310" fill="#6BB1AD" opacity="0.5" clip-path="url(#svg-cardClip)" />
+            
+            <polygon points="480,0 370,0 480,140" fill="#E6748E" opacity="0.8" clip-path="url(#svg-cardClip)" />
+            <polygon points="480,0 430,0 480,60" fill="#F5C8D4" opacity="0.6" clip-path="url(#svg-cardClip)" />
+            <polygon points="480,120 400,180 480,260" fill="#E5A9A9" opacity="0.65" clip-path="url(#svg-cardClip)" />
+            <polygon points="480,240 430,280 480,340" fill="#E6748E" opacity="0.5" clip-path="url(#svg-cardClip)" />
+            
+            <polygon points="130,200 200,140 270,200" fill="#E6748E" opacity="0.15" />
+            <polygon points="200,200 290,120 380,200" fill="#E6748E" opacity="0.12" />
+            
+            <!-- Pine silhouette inside card -->
+            <g fill="#6BB1AD" opacity="0.65" clip-path="url(#svg-cardClip)">
+              <!-- generated dynamically in SVG for aesthetics -->
+              <polygon points="13,312 0,323 5,323 0,340 26,340 21,323 26,323" />
+              <polygon points="40,312 27,323 32,323 27,340 53,340 48,323 53,323" />
+              <polygon points="67,312 54,323 59,323 54,340 80,340 75,323 80,323" />
+              <polygon points="94,312 81,323 86,323 81,340 107,340 102,323 107,323" />
+              <polygon points="121,312 108,323 113,323 108,340 134,340 129,323 134,323" />
+              <polygon points="148,312 135,323 140,323 135,340 161,340 156,323 161,323" />
+              <polygon points="175,312 162,323 167,323 162,340 188,340 183,323 188,323" />
+              <polygon points="202,312 189,323 194,323 189,340 215,340 210,323 215,323" />
+              <polygon points="229,312 216,323 221,323 216,340 242,340 237,323 242,323" />
+              <polygon points="256,312 243,323 248,323 243,340 269,340 264,323 269,323" />
+              <polygon points="283,312 270,323 275,323 270,340 296,340 291,323 296,323" />
+              <polygon points="310,312 297,323 302,323 297,340 323,340 318,323 323,323" />
+              <polygon points="337,312 324,323 329,323 324,340 350,340 345,323 350,323" />
+              <polygon points="364,312 351,323 356,323 351,340 377,340 372,323 377,323" />
+              <polygon points="391,312 378,323 383,323 378,340 404,340 399,323 404,323" />
+              <polygon points="418,312 405,323 410,323 405,340 431,340 426,323 431,323" />
+              <polygon points="445,312 432,323 437,323 432,340 458,340 453,323 458,323" />
+              <polygon points="472,312 459,323 464,323 459,340 485,340 480,323 485,323" />
+            </g>
+
+            <circle cx="55" cy="22" r="10" fill="#EDECDB" stroke="#C8B8A0" stroke-width="1.5" />
+            <circle cx="55" cy="22" r="5" fill="#E0DEC9" />
+            <circle cx="425" cy="22" r="10" fill="#EDECDB" stroke="#C8B8A0" stroke-width="1.5" />
+            <circle cx="425" cy="22" r="5" fill="#E0DEC9" />
+
+            <text x="240" y="46" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-style="italic" font-weight="400" font-size="13" fill="#6BB1AD" letter-spacing="1">Cilacap</text>
+            <text x="240" y="68" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="26" fill="#E6748E" letter-spacing="1">PLAY<tspan fill="#6BB1AD">ON</tspan></text>
+            <text x="240" y="86" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="15" fill="#6BB1AD" letter-spacing="2">5K <tspan font-style="italic" fill="#E6748E">FUN RUN</tspan></text>
+            <text x="240" y="100" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-weight="400" font-size="9" fill="#A0998A" letter-spacing="1.5">make your fun running on!</text>
+
+            <!-- BIB NUMBER (DYNAMIC) -->
+            <text id="svg-bib-number" x="240" y="198" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-weight="900" font-size="100" fill="#E6748E" letter-spacing="-2">0000</text>
+
+            <!-- RUNNER NAME (DYNAMIC) -->
+            <text id="svg-runner-name" x="240" y="240" text-anchor="middle" font-family="'Barlow Condensed', sans-serif" font-weight="800" font-size="36" fill="#6BB1AD" letter-spacing="3">RUNNER</text>
+
+            <text x="18" y="333" font-family="'Barlow Condensed', sans-serif" font-weight="700" font-size="8" fill="#A0998A" letter-spacing="1.5">ARKASA CREATIVE PARTNER</text>
+          </svg>
+        </div>
+        <p class="text-center text-[11px] text-neutral-400 italic mt-3">* Nomor BIB fisik akan dibagikan saat registrasi ulang di lokasi.</p>
+      </div>
+
+      <!-- registration details card -->
+      <div class="w-full bg-brandWhite border border-brandPinkLight shadow-sm mb-6">
+        <div class="px-6 py-4 border-b border-brandPinkLight flex items-center gap-3">
+          <div class="w-7 h-[3px] bg-brandTeal"></div>
+          <span class="font-title font-extrabold text-[11px] tracking-wider text-brandDark uppercase">DETAIL PENDAFTARAN</span>
+        </div>
+        
+        <div class="p-6 space-y-3 text-sm">
+          <div class="flex justify-between items-baseline py-1.5 border-b border-brandCreamDark">
+            <span class="text-neutral-400 text-xs">No. Registrasi</span>
+            <span id="confirm-id" class="font-title font-extrabold text-brandPink text-base tracking-wider">CPR-XXXXX</span>
+          </div>
+          <div class="flex justify-between items-baseline py-1.5 border-b border-brandCreamDark">
+            <span class="text-neutral-400 text-xs">No. BIB</span>
+            <span id="confirm-bib" class="font-title font-extrabold text-brandTeal text-base tracking-wider">0000</span>
+          </div>
+          <div class="flex justify-between items-baseline py-1.5 border-b border-brandCreamDark">
+            <span class="text-neutral-400 text-xs">Nama Peserta</span>
+            <span id="confirm-name" class="font-semibold text-brandDark"></span>
+          </div>
+          <div class="flex justify-between items-baseline py-1.5 border-b border-brandCreamDark">
+            <span class="text-neutral-400 text-xs">Email</span>
+            <span id="confirm-email" class="text-brandDark"></span>
+          </div>
+          <div class="flex justify-between items-baseline py-1.5 border-b border-brandCreamDark">
+            <span class="text-neutral-400 text-xs">No. WhatsApp</span>
+            <span id="confirm-phone" class="text-brandDark"></span>
+          </div>
+          <div class="flex justify-between items-baseline py-1.5 border-b border-brandCreamDark">
+            <span class="text-neutral-400 text-xs">Jenis Kelamin</span>
+            <span id="confirm-gender" class="text-brandDark"></span>
+          </div>
+          <div class="flex justify-between items-baseline py-1.5 border-b border-brandCreamDark">
+            <span class="text-neutral-400 text-xs">Ukuran Jersey</span>
+            <span id="confirm-jersey" class="text-brandDark"></span>
+          </div>
+          <div class="flex justify-between items-baseline py-1.5 border-b border-brandCreamDark">
+            <span class="text-neutral-400 text-xs">Jenis Promosi</span>
+            <span id="confirm-promo" class="font-title font-semibold text-brandDark">EARLY BIRD</span>
+          </div>
+          <div class="flex justify-between items-baseline py-2">
+            <span class="text-neutral-400 text-xs">Total Pembayaran</span>
+            <span id="confirm-total" class="font-title font-black text-lg text-brandPink">Rp 85.000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- WhatsApp Confirmation Card -->
+      <div class="w-full bg-brandWhite border border-brandPinkLight shadow-sm px-6 py-6 mb-6">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-7 h-[3px] bg-green-600"></div>
+          <span class="font-title font-extrabold text-[11px] tracking-wider text-brandDark uppercase">KONFIRMASI WHATSAPP</span>
+        </div>
+        <p class="text-xs text-neutral-600 leading-relaxed mb-5">
+          Untuk mempercepat verifikasi pembayaran oleh panitia, silakan kirim konfirmasi secara otomatis ke WhatsApp Admin dengan menekan tombol di bawah ini.
+        </p>
+        <button
+          id="btn-wa-confirm"
+          class="w-full bg-green-600 hover:bg-green-700 text-brandWhite py-3.5 px-4 font-title font-extrabold tracking-widest text-sm transition-colors cursor-pointer text-center uppercase flex items-center justify-center gap-2 shadow-sm"
+        >
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.528 2.01 14.069.99 11.5.992c-5.45 0-9.88 4.379-9.884 9.822-.001 1.778.476 3.51 1.38 5.05L2.002 22l6.4-1.687c-1.6.86-3.1 1.3-4.7 1.3H3.7c.05 0 .1 0 .15-.05l.1-.05h.05zM17.47 15.39c-.29-.145-1.72-.85-1.985-.95-.264-.1-.458-.145-.65.145-.19.29-.74.95-.906 1.14-.167.19-.334.21-.62.07-.29-.14-1.225-.45-2.33-1.44-.86-.77-1.44-1.72-1.61-2-.17-.29-.02-.45.13-.59.13-.13.29-.34.44-.5.15-.17.2-.29.3-.49.1-.2.05-.38-.02-.52-.07-.15-.65-1.56-.89-2.14-.23-.56-.46-.48-.65-.49-.17 0-.36-.01-.56-.01-.2 0-.52.075-.79.36-.27.29-1.03 1.002-1.03 2.44 0 1.44 1.05 2.83 1.2 3.02.15.19 2.07 3.16 5.003 4.43.7.3 1.25.48 1.68.62.7.22 1.34.19 1.85.11.57-.08 1.72-.7 1.96-1.38.24-.68.24-1.26.17-1.38-.07-.12-.26-.19-.55-.33z"/>
+          </svg>
+          KONFIRMASI VIA WHATSAPP
+        </button>
+      </div>
+
+      <!-- Hari Pelaksanaan -->
+      <div class="w-full bg-brandWhite border border-brandPinkLight shadow-sm px-6 py-6 mb-8">
+        <p class="font-title font-bold text-[11px] tracking-wider text-brandTealDark mb-4 uppercase">HARI PELAKSANAAN</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          <div class="p-4 rounded-lg bg-brandTeal text-brandWhite">
+            <p class="text-brandWhite/80 text-[11px]">Hari / Tanggal</p>
+            <p class="font-semibold mt-1">Minggu, 20 September 2026</p>
+          </div>
+          <div class="p-4 rounded-lg bg-brandTeal text-brandWhite">
+            <p class="text-brandWhite/80 text-[11px]">Lokasi</p>
+            <p class="font-semibold mt-1">Lap. Jati Persada, Cilacap</p>
+          </div>
+          <div class="p-4 rounded-lg bg-brandTeal text-brandWhite">
+            <p class="text-brandWhite/80 text-[11px]">Registrasi Ulang</p>
+            <p class="font-semibold mt-1">04.30 WIB</p>
+          </div>
+          <div class="p-4 rounded-lg bg-brandTeal text-brandWhite">
+            <p class="text-brandWhite/80 text-[11px]">Flag Off</p>
+            <p class="font-semibold mt-1">05.30 WIB</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full bg-brandWhite border border-brandPinkLight shadow-sm px-6 py-6 mb-8">
+        <p class="font-title font-bold text-[11px] tracking-wider text-brandPink mb-4 uppercase">KONTAK PANITIA</p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+          <div class="p-4 rounded-lg bg-brandMelon text-brandWhite">
+            <p class="text-brandWhite/80 text-[11px] uppercase tracking-wider">WhatsApp</p>
+            <p class="font-semibold mt-1">+62 812-3456-7890</p>
+          </div>
+          <div class="p-4 rounded-lg bg-brandMelon text-brandWhite">
+            <p class="text-brandWhite/80 text-[11px] uppercase tracking-wider">Email</p>
+            <p class="font-semibold mt-1">panitia@cilacapplayon.id</p>
+          </div>
+          <div class="p-4 rounded-lg bg-brandMelon text-brandWhite">
+            <p class="text-brandWhite/80 text-[11px] uppercase tracking-wider">Instagram</p>
+            <p class="font-semibold mt-1">@cilacapplayon</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back button -->
+      <button
+        id="success-home-btn"
+        class="group w-full bg-gradient-to-r from-brandTeal to-[#5AA29E] hover:from-brandTealDark hover:to-brandTeal text-brandWhite py-5 px-8 font-title font-black tracking-[0.22em] text-base transition-all duration-300 cursor-pointer text-center shadow-md relative overflow-hidden flex items-center justify-center hover:shadow-lg uppercase"
+      >
+        <!-- Halftone Dot Texture -->
+        <div class="absolute inset-y-0 right-0 w-40 bg-halftone opacity-15 pointer-events-none"></div>
+        
+        <!-- Geometric Ornaments Left -->
+        <div class="absolute inset-y-0 left-0 w-12 pointer-events-none overflow-hidden opacity-45">
+          <svg class="w-full h-full" viewBox="0 0 48 80" preserveAspectRatio="none">
+            <polygon points="0,0 36,0 0,80" fill="#E6748E" />
+            <polygon points="0,0 16,0 0,40" fill="#EDECDB" />
+          </svg>
+        </div>
+        
+        <!-- Geometric Ornaments Right -->
+        <div class="absolute inset-y-0 right-0 w-20 pointer-events-none overflow-hidden opacity-35">
+          <svg class="w-full h-full" viewBox="0 0 80 80" preserveAspectRatio="none">
+            <polygon points="80,0 20,80 80,80" fill="#EDECDB" />
+            <polygon points="80,30 40,80 80,80" fill="#E6748E" />
+          </svg>
+        </div>
+
+        <span class="relative z-10 flex items-center gap-2">
+          <span>KEMBALI KE HALAMAN UTAMA</span>
+          <span class="text-base leading-none transition-transform duration-300 group-hover:translate-x-2">→</span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- app logic link -->
+  <script src="app.js"></script>
+</body>
+</html>
