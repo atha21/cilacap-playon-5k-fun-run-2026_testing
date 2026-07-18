@@ -41,7 +41,7 @@ const state = {
 // SIMULASI TANGGAL HARI INI (SIMULATION DATE IN 2026)
 // Ubah/isi variabel ini untuk mensimulasikan tanggal pendaftaran (format: YYYY-MM-DD atau new Date())
 // Contoh: const SIMULATED_TODAY = new Date('2026-07-25'); // Super Early Bird
-const SIMULATED_TODAY = null
+const SIMULATED_TODAY = new Date('2026-08-01')
 
 // LOGIKA HARGA & QRIS DINAMIS
 function getPromoDetails() {
@@ -53,18 +53,18 @@ function getPromoDetails() {
   // Default Normal
   let type = 'Normal';
   let price = 175000;
-  let qrImage = 'qrnormal.jpeg';
+  let qrImage = 'qristest.jpeg';
 
   // Ketentuan di tahun 2026
   if (year === 2026) {
     if (month === 7 && date >= 20 && date <= 31) {
       type = 'Super Early Bird';
       price = 150000;
-      qrImage = 'qrsuperearlybird.jpeg';
+      qrImage = 'qristest.jpeg';
     } else if (month === 8 && date >= 1 && date <= 15) {
       type = 'Early Bird';
       price = 165000;
-      qrImage = 'qeearlybird.jpeg'; // disesuaikan dengan ejaan file di folder assets
+      qrImage = 'qristest.jpeg'; // disesuaikan dengan ejaan file di folder assets
     }
   }
 
