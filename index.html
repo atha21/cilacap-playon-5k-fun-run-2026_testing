@@ -704,23 +704,15 @@
               <p id="bank-copy-feedback" class="mt-3 text-[10px] text-brandTealDark hidden">Nomor rekening disalin ke clipboard.</p>
             </div>
           </div>
-          <input type="file" id="proof-file-input" accept="image/*,application/pdf" class="hidden" />
-          <div id="upload-placeholder" class="border-2 border-dashed border-brandCreamDark hover:border-brandPink bg-transparent hover:bg-brandCreamDark/30 p-8 flex flex-col items-center justify-center gap-3 cursor-pointer transition-colors duration-200">
-            <svg class="w-8 h-8 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+          <!-- INFO: Bukti pembayaran dikirim manual via WhatsApp setelah pendaftaran sukses -->
+          <div class="border border-brandTeal/30 bg-brandTeal/5 p-5 flex items-start gap-3">
+            <svg class="w-6 h-6 text-brandTeal flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span class="font-title font-bold text-xs tracking-wider text-brandTealDark">KLIK UNTUK UNGGAH BUKTI PEMBAYARAN <span class="text-brandPink">*</span></span>
-            <span class="text-[10px] text-neutral-400">JPG, PNG, atau PDF · Maks. 5 MB</span>
-          </div>
-          <div id="file-preview-container" class="hidden border border-brandCreamDark p-4 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-              <img id="file-preview-img" src="" alt="Bukti Transfer" class="w-12 h-12 object-cover border border-brandCreamDark hidden" />
-              <div>
-                <p id="file-name-text" class="text-sm font-semibold text-brandDark truncate max-w-[200px] sm:max-w-xs"></p>
-                <p class="text-[11px] text-brandTeal">File berhasil dipilih</p>
-              </div>
+            <div>
+              <p class="font-title font-bold text-xs tracking-wider text-brandTealDark mb-1">KONFIRMASI DAN BUKTI PEMBAYARAN VIA WHATSAPP</p>
+              <p class="text-[11px] text-neutral-500 leading-relaxed">Setelah berhasil mendaftar, kamu akan diarahkan untuk mengirim konfirmasi dan bukti transfer ke WhatsApp panitia!.</p>
             </div>
-            <button type="button" id="remove-file-btn" class="text-xs text-brandPink hover:underline font-semibold cursor-pointer">Hapus</button>
           </div>
         </div>
 
@@ -820,7 +812,7 @@
           SELAMAT, <br><span id="success-greet-name" class="text-brandPink">-!</span>
         </h2>
         <p class="text-xs text-neutral-500 max-w-[440px] mx-auto leading-relaxed">
-          Pendaftaran kamu telah kami terima. Panitia akan memverifikasi bukti pembayaran dan mengirimkan konfirmasi ke WhatsApp kamu.
+          Pendaftaran kamu telah kami terima. Silakan kirimkan <strong class="text-brandPink">bukti transfer pembayaran</strong> ke WhatsApp panitia melalui tombol di bawah. Panitia akan memverifikasi dan mengirimkan konfirmasi.
         </p>
       </div>
 
@@ -956,9 +948,15 @@
           <div class="w-7 h-[3px] bg-green-600"></div>
           <span class="font-title font-extrabold text-[11px] tracking-wider text-brandDark uppercase">KONFIRMASI WHATSAPP</span>
         </div>
-        <p class="text-xs text-neutral-600 leading-relaxed mb-5">
-          Untuk mempercepat verifikasi pembayaran oleh panitia, silakan kirim konfirmasi secara otomatis ke WhatsApp Admin dengan menekan tombol di bawah ini.
+        <p class="text-xs text-neutral-600 leading-relaxed mb-3">
+          Tekan tombol di bawah untuk mengirim pesan konfirmasi pembayaran ke WhatsApp Admin.
         </p>
+        <div class="bg-amber-50 border border-amber-300 p-3 mb-5 flex items-start gap-2">
+          <span class="text-amber-500 text-base leading-none mt-px">⚠️</span>
+          <p class="text-[11px] text-amber-800 leading-relaxed">
+            <strong>PENTING:</strong> Setelah pesan otomatis terkirim, kamu <strong>wajib melampirkan foto/screenshot bukti transfer</strong> secara manual di dalam chat WhatsApp tersebut agar pembayaran bisa segera diverifikasi oleh panitia.
+          </p>
+        </div>
         <button
           id="btn-wa-confirm"
           class="w-full bg-green-600 hover:bg-green-700 text-brandWhite py-3.5 px-4 font-title font-extrabold tracking-widest text-sm transition-colors cursor-pointer text-center uppercase flex items-center justify-center gap-2 shadow-sm"

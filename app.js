@@ -34,14 +34,13 @@ if (ACTIVE_CONFIG.SUPABASE_URL && ACTIVE_CONFIG.SUPABASE_URL.indexOf("your-supab
 // STATE UTAMA SPA
 const state = {
   page: 'landing', // 'landing' | 'registration' | 'confirmation'
-  registrationData: null,
-  uploadingFile: null
+  registrationData: null
 };
 
 // SIMULASI TANGGAL HARI INI (SIMULATION DATE IN 2026)
 // Ubah/isi variabel ini untuk mensimulasikan tanggal pendaftaran (format: YYYY-MM-DD atau new Date())
 // Contoh: const SIMULATED_TODAY = new Date('2026-07-25'); // Super Early Bird
-const SIMULATED_TODAY = new Date('2026-08-01')
+const SIMULATED_TODAY = null;
 
 // LOGIKA HARGA & QRIS DINAMIS
 function getPromoDetails() {
@@ -71,7 +70,67 @@ function getPromoDetails() {
   return { type, price, qrImage };
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+// ==========================================
+// CIRCUIT BREAKER & TRAFFIC PROTECTION
+// ==========================================
+
+// Fungsi bantu untuk membungkus promise dengan Timeout (default 15 detik)
+function withTimeout(promise, ms = 15000) {
+  let timeoutId;
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error("GATEWAY_TIMEOUT"));
+    }, ms);
+  });
+  return Promise.race([
+    promise.then((res) => {
+      clearTimeout(timeoutId);
+      return res;
+    }),
+    timeoutPromise
+  ]);
+}
+
+// Cek status heavy load (Manual Valve) sebelum halaman dimuat sepenuhnya
+async function checkHeavyLoadConfig() {
+  if (!supabaseClient) return;
+  try {
+    const queryPromise = supabaseClient
+      .from('system_config')
+      .select('value')
+      .eq('key', 'is_heavy_load')
+      .single();
+
+    // Valve check dengan timeout perlindungan
+    const { data, error } = await withTimeout(queryPromise, 15000);
+
+    if (error) {
+      // Tangkap status 429 atau 503 jika terdeteksi dari respons error API Supabase
+      if (error.status === 429 || error.status === 503) {
+        window.location.href = 'heavy_load.html';
+        return;
+      }
+      console.warn("Gagal mengecek system_config:", error.message);
+      return;
+    }
+
+    if (data && data.value === true) {
+      window.location.href = 'heavy_load.html';
+    }
+  } catch (err) {
+    console.error("Circuit Breaker Cek Gagal:", err);
+    // Jika timeout atau error koneksi lainnya, arahkan ke heavy_load.html
+    window.location.href = 'heavy_load.html';
+  }
+}
+
+// ==========================================
+// ENTRY POINT: DOMContentLoaded
+// ==========================================
+document.addEventListener('DOMContentLoaded', async () => {
+  // Jalankan pengecekan heavy load sesegera mungkin
+  await checkHeavyLoadConfig();
+
   setupNavigation();
   setupFormHandlers();
   setupHistoryNavigation();
@@ -190,27 +249,48 @@ function navigatePage(newPage, options = { push: true }) {
 // RESET FORM
 function resetRegistrationForm() {
   document.getElementById('reg-form').reset();
-  state.uploadingFile = null;
-  
-  // Sembunyikan preview file & kembalikan placeholder upload
-  document.getElementById('file-preview-container').classList.add('hidden');
-  document.getElementById('upload-placeholder').classList.remove('hidden');
   document.getElementById('submit-reg-btn').disabled = true;
   document.getElementById('age-display-text').textContent = '';
   document.getElementById('bib-preview-text').textContent = '';
 }
 
-// SETUP EVENT NAVIGASI
+// ==========================================
+// SETUP EVENT NAVIGASI (+ Anti-Spam Click)
+// ==========================================
 function setupNavigation() {
   // Smooth scroll links: default browser anchor navigation preserves history and back/forward behavior
   document.documentElement.style.scrollBehavior = 'smooth';
 
-  // Tombol Daftar dari Landing Page
+  // Tombol Daftar dari Landing Page (Anti-Spam: disable setelah klik pertama)
   const regTriggerButtons = document.querySelectorAll('.btn-go-daftar');
+  // Simpan teks asli setiap tombol agar bisa di-restore setelah navigasi
+  const originalBtnTexts = new Map();
+  regTriggerButtons.forEach(btn => {
+    originalBtnTexts.set(btn, btn.textContent);
+  });
+
   regTriggerButtons.forEach(btn => {
     btn.addEventListener('click', () => {
+      // Anti-Spam: Disable semua tombol daftar sekaligus + ubah teks ke "MEMPROSES..."
+      regTriggerButtons.forEach(b => {
+        b.disabled = true;
+        b.style.opacity = '0.5';
+        b.style.cursor = 'not-allowed';
+        b.textContent = 'MEMPROSES...';
+      });
+
       resetRegistrationForm(); // Bersihkan data form sebelumnya
       navigatePage('registration');
+
+      // Kembalikan status tombol setelah navigasi (halaman landing tersembunyi, tapi restore untuk kembali nanti)
+      setTimeout(() => {
+        regTriggerButtons.forEach(b => {
+          b.disabled = false;
+          b.style.opacity = '';
+          b.style.cursor = '';
+          b.textContent = originalBtnTexts.get(b) || 'DAFTAR SEKARANG';
+        });
+      }, 1500);
     });
   });
 
@@ -219,24 +299,70 @@ function setupNavigation() {
     navigatePage('landing');
   });
 
-  // Kembali ke Home dari konfirmasi sukses
-  document.getElementById('success-home-btn').addEventListener('click', () => {
+  // Kembali ke Home dari konfirmasi sukses (Anti-Spam)
+  const homeBtn = document.getElementById('success-home-btn');
+  const originalHomeHTML = homeBtn.innerHTML;
+  homeBtn.addEventListener('click', () => {
+    // Anti-Spam: Disable tombol kembali agar tidak bisa di-spam
+    homeBtn.disabled = true;
+    homeBtn.style.opacity = '0.5';
+    homeBtn.style.cursor = 'not-allowed';
+    homeBtn.innerHTML = '<span class="relative z-10">MEMPROSES...</span>';
+
     resetRegistrationForm(); // Bersihkan data form untuk pendaftaran berikutnya
     state.registrationData = null; // Hapus data pendaftaran sebelumnya dari memori
     navigatePage('landing');
+
+    // Kembalikan status tombol setelah navigasi
+    setTimeout(() => {
+      homeBtn.disabled = false;
+      homeBtn.style.opacity = '';
+      homeBtn.style.cursor = '';
+      homeBtn.innerHTML = originalHomeHTML;
+    }, 1500);
   });
 }
 
+// ==========================================
 // SETUP LOGIKA FORMULIR & SUBMIT
+// ==========================================
 function setupFormHandlers() {
   const form = document.getElementById('reg-form');
   const submitBtn = document.getElementById('submit-reg-btn');
-  const fileInput = document.getElementById('proof-file-input');
-  const uploadPlaceholder = document.getElementById('upload-placeholder');
-  const filePreviewContainer = document.getElementById('file-preview-container');
-  const filePreviewImg = document.getElementById('file-preview-img');
-  const fileNameText = document.getElementById('file-name-text');
-  const removeFileBtn = document.getElementById('remove-file-btn');
+
+  // ==========================================
+  // DYNAMIC HONEYPOT INJECTION
+  // ==========================================
+  // Membuat container honeypot yang disembunyikan secara visual namun ramah bot
+  const honeypotContainer = document.createElement('div');
+  honeypotContainer.style.opacity = '0';
+  honeypotContainer.style.position = 'absolute';
+  honeypotContainer.style.width = '0';
+  honeypotContainer.style.height = '0';
+  honeypotContainer.style.overflow = 'hidden';
+  honeypotContainer.style.pointerEvents = 'none';
+  honeypotContainer.setAttribute('tabindex', '-1');
+  honeypotContainer.setAttribute('aria-hidden', 'true');
+
+  // Input jebakan 1: Konfirmasi email tambahan
+  const honeyEmail = document.createElement('input');
+  honeyEmail.type = 'text';
+  honeyEmail.name = 'sub_email_confirmation';
+  honeyEmail.id = 'input-honey-email';
+  honeyEmail.autocomplete = 'off';
+  honeyEmail.setAttribute('tabindex', '-1');
+
+  // Input jebakan 2: Nomor HP alternatif
+  const honeyPhone = document.createElement('input');
+  honeyPhone.type = 'text';
+  honeyPhone.name = 'phone_alternative';
+  honeyPhone.id = 'input-honey-phone';
+  honeyPhone.autocomplete = 'off';
+  honeyPhone.setAttribute('tabindex', '-1');
+
+  honeypotContainer.appendChild(honeyEmail);
+  honeypotContainer.appendChild(honeyPhone);
+  form.appendChild(honeypotContainer);
 
   // Input DOB untuk kalkulasi usia dinamis
   const dobInput = document.getElementById('input-dob');
@@ -272,46 +398,6 @@ function setupFormHandlers() {
   nameInput.addEventListener('input', updateBIBPreview);
   bibNameInput.addEventListener('input', updateBIBPreview);
 
-  // Trigger file upload dialog
-  uploadPlaceholder.addEventListener('click', () => {
-    fileInput.click();
-  });
-
-  // Saat file dipilih
-  fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Ukuran file maksimal adalah 5MB!");
-        fileInput.value = "";
-        return;
-      }
-      state.uploadingFile = file;
-      fileNameText.textContent = file.name;
-
-      if (file.type.startsWith('image/')) {
-        const url = URL.createObjectURL(file);
-        filePreviewImg.src = url;
-        filePreviewImg.classList.remove('hidden');
-      } else {
-        filePreviewImg.classList.add('hidden'); // PDF/etc
-      }
-
-      uploadPlaceholder.classList.add('hidden');
-      filePreviewContainer.classList.remove('hidden');
-    }
-    checkFormValidity();
-  });
-
-  // Hapus file terpilih
-  removeFileBtn.addEventListener('click', () => {
-    fileInput.value = "";
-    state.uploadingFile = null;
-    uploadPlaceholder.classList.remove('hidden');
-    filePreviewContainer.classList.add('hidden');
-    checkFormValidity();
-  });
-
   // Enforce numeric-only for phone inputs and wire validation listeners
   const phoneInputEl = document.getElementById('input-phone');
   const emergencyPhoneEl = document.getElementById('input-emergency-phone');
@@ -338,6 +424,25 @@ function setupFormHandlers() {
     el.addEventListener('change', checkFormValidity);
   });
 
+  // Validasi form: semua field wajib terisi sebelum tombol submit aktif
+  function checkFormValidity() {
+    const name = nameInput.value.trim();
+    const email = document.getElementById('input-email').value.trim();
+    const phone = document.getElementById('input-phone').value.trim();
+    const gender = document.getElementById('select-gender').value;
+    const emergencyName = document.getElementById('input-emergency-name').value.trim();
+    const emergencyRelation = document.getElementById('input-emergency-relation').value.trim();
+    const emergencyPhone = document.getElementById('input-emergency-phone').value.trim();
+    const bloodType = document.getElementById('select-blood-type').value;
+
+    const phoneIsDigits = phone !== '' && /^\d+$/.test(phone);
+    const emergencyPhoneIsDigits = emergencyPhone !== '' && /^\d+$/.test(emergencyPhone);
+
+    const allValid = name && email && phoneIsDigits && gender && emergencyName && emergencyRelation && emergencyPhoneIsDigits && bloodType;
+    submitBtn.disabled = !allValid;
+  }
+
+  // Tombol Salin Nomor Rekening
   const bankCopyBtn = document.getElementById('btn-copy-bank');
   const bankCopyFeedback = document.getElementById('bank-copy-feedback');
   if (bankCopyBtn) {
@@ -365,61 +470,57 @@ function setupFormHandlers() {
     });
   }
 
-  function checkFormValidity() {
-    const name = nameInput.value.trim();
-    const email = document.getElementById('input-email').value.trim();
-    const phone = document.getElementById('input-phone').value.trim();
-    const gender = document.getElementById('select-gender').value;
-    const emergencyName = document.getElementById('input-emergency-name').value.trim();
-    const emergencyRelation = document.getElementById('input-emergency-relation').value.trim();
-    const emergencyPhone = document.getElementById('input-emergency-phone').value.trim();
-    const bloodType = document.getElementById('select-blood-type').value;
-    const hasFile = state.uploadingFile !== null;
-
-    const phoneIsDigits = phone !== '' && /^\d+$/.test(phone);
-    const emergencyPhoneIsDigits = emergencyPhone !== '' && /^\d+$/.test(emergencyPhone);
-
-    const allValid = name && email && phoneIsDigits && gender && emergencyName && emergencyRelation && emergencyPhoneIsDigits && bloodType && hasFile;
-    submitBtn.disabled = !allValid;
-  }
-
-  // Submit Data ke Supabase
+  // ==========================================
+  // SUBMIT DATA KE SUPABASE
+  // (Anti-Spam Click + Circuit Breaker Timeout 15 detik)
+  // ==========================================
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (submitBtn.disabled) return;
 
+    // 1. CEK HONEYPOT DETECT (Bot Detection)
+    const honeyEmailVal = honeyEmail.value.trim();
+    const honeyPhoneVal = honeyPhone.value.trim();
+
+    if (honeyEmailVal !== '' || honeyPhoneVal !== '') {
+      console.warn("Honeypot triggered! Bot detected.");
+
+      // FAKE SUCCESS RESPONSE
+      // Disable tombol instan agar bot mengira proses berjalan nyata
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.5';
+      submitBtn.style.cursor = 'not-allowed';
+      submitBtn.innerHTML = '<span class="relative z-10">MEMPROSES...</span>';
+
+      setTimeout(() => {
+        // Tampilkan notifikasi sukses palsu untuk membingungkan bot
+        alert("Pendaftaran Berhasil! Silakan selesaikan pembayaran.");
+
+        // Reset form & kembalikan state tombol
+        form.reset();
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '';
+        submitBtn.style.cursor = '';
+        submitBtn.innerHTML = 'DAFTAR SEKARANG';
+
+        // Arahkan ke landing page secara diam-diam
+        navigatePage('landing');
+      }, 1000);
+      return;
+    }
+
+    // Anti-Spam: Disable tombol submit instan & ubah visual
     submitBtn.disabled = true;
-    submitBtn.textContent = "MEMPROSES PENDAFTARAN...";
+    submitBtn.style.opacity = '0.5';
+    submitBtn.style.cursor = 'not-allowed';
+    const originalSubmitHTML = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="relative z-10">MEMPROSES...</span>';
 
     const promo = getPromoDetails();
     const tempRandomId = Math.floor(Math.random() * 9000) + 1000;
-    let fileUrl = "";
 
     try {
-      if (!supabaseClient) {
-        // Mode demo jika Supabase tidak diset
-        console.warn("Supabase tidak aktif. Menggunakan Mode Demo Simulasi.");
-        fileUrl = "https://images.unsplash.com/photo-1522040942177-269680274214?w=400";
-      } else {
-        // 1. Upload Bukti Pembayaran ke Supabase Storage Bucket 'bukti-transfer'
-        const fileExt = state.uploadingFile.name.split('.').pop();
-        const filePath = `receipts/CP_${Date.now()}.${fileExt}`;
-        
-        const { data: uploadData, error: uploadError } = await supabaseClient.storage
-          .from('bukti-transfer')
-          .upload(filePath, state.uploadingFile);
-
-        if (uploadError) throw uploadError;
-
-        // Dapatkan URL Public File Bukti
-        const { data: publicUrlData } = supabaseClient.storage
-          .from('bukti-transfer')
-          .getPublicUrl(filePath);
-
-        fileUrl = publicUrlData.publicUrl;
-      }
-
-      // 2. Simpan data pendaftaran ke PostgreSQL Supabase
+      // Susun payload data pendaftaran (STRICT PAYLOAD CLEANING: Tidak memasukkan field honeypot ke Supabase)
       const newPendaftar = {
         nama_lengkap: nameInput.value.trim(),
         email: document.getElementById('input-email').value.trim(),
@@ -434,7 +535,7 @@ function setupFormHandlers() {
         riwayat_medis: document.getElementById('input-medical-history').value.trim() || null,
         ukuran_jersey: document.getElementById('select-jersey-size').value || null,
         nama_custom_bib: bibNameInput.value.trim() || null,
-        bukti_transfer_url: fileUrl,
+        bukti_transfer_url: null, // Bukti transfer dikirim manual via WhatsApp
         jenis_promosi: promo.type,
         nominal_bayar: promo.price,
         status_pembayaran: 'PENDING'
@@ -443,17 +544,43 @@ function setupFormHandlers() {
       let insertedData = null;
 
       if (supabaseClient) {
-        const { data, error } = await supabaseClient
+        // Circuit Breaker: Bungkus insert dengan timeout maksimal 15 detik
+        const insertPromise = supabaseClient
           .from('pendaftar_running')
           .insert([newPendaftar])
-          .select('*');
+          .select('nomor_registrasi, nomor_bib');
 
-        if (error) throw error;
+        const { data, error } = await withTimeout(insertPromise, 15000);
+
+        if (error) {
+          // Tangkap kode unik duplikat dari Postgres (unique constraint violation)
+          if (error.code === '23505') {
+            alert("❌ Pendaftaran Gagal!\n\nEmail atau Nomor HP ini sudah terdaftar. Silakan gunakan data lain atau hubungi admin.");
+            // Kembalikan tombol submit agar user bisa koreksi dan coba lagi
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '';
+            submitBtn.style.cursor = '';
+            submitBtn.innerHTML = originalSubmitHTML;
+            return;
+          }
+          // Cek HTTP 429 (Too Many Requests) / 503 (Service Unavailable) → redirect ke heavy_load
+          if (error.status === 429 || error.status === 503) {
+            window.location.href = 'heavy_load.html';
+            return;
+          }
+          throw error;
+        }
         if (data && data.length > 0) {
-          insertedData = data[0];
+          // Gabungkan data input dari memori browser dengan nomor_registrasi & nomor_bib dari database
+          insertedData = {
+            ...newPendaftar,
+            nomor_registrasi: data[0].nomor_registrasi,
+            nomor_bib: data[0].nomor_bib
+          };
         }
       } else {
-        // Mock data untuk mode demo
+        // Mock data untuk mode demo jika Supabase tidak diset
+        console.warn("Supabase tidak aktif. Menggunakan Mode Demo Simulasi.");
         insertedData = {
           ...newPendaftar,
           id: tempRandomId,
@@ -466,15 +593,22 @@ function setupFormHandlers() {
       navigatePage('confirmation');
 
     } catch (err) {
-      alert("Pendaftaran Gagal: " + err.message);
       console.error(err);
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "DAFTAR SEKARANG";
+      // Circuit Breaker: Jika timeout (>15 detik) → redirect ke heavy_load.html
+      if (err.message === 'GATEWAY_TIMEOUT') {
+        window.location.href = 'heavy_load.html';
+      } else {
+        alert("Pendaftaran Gagal: " + err.message);
+        // Kembalikan tombol submit ke keadaan semula agar user bisa coba lagi
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '';
+        submitBtn.style.cursor = '';
+        submitBtn.innerHTML = originalSubmitHTML;
+      }
     }
   });
 
-  // Setup Listener untuk WhatsApp Confirmation
+  // Tombol Konfirmasi WhatsApp (format teks otomatis + instruksi lampir bukti manual)
   const waConfirmBtn = document.getElementById('btn-wa-confirm');
   if (waConfirmBtn) {
     waConfirmBtn.addEventListener('click', () => {
@@ -482,19 +616,17 @@ function setupFormHandlers() {
       if (!data) return;
 
       const message = `Halo Admin Cilacap Playon! Saya ingin konfirmasi pendaftaran.
+          Detail Data:
+          - NO REG: ${data.nomor_registrasi}
+          - NO BIB: ${data.nomor_bib}
+          - Nama Lengkap: ${data.nama_lengkap}
+          - Nama Custom BIB: ${data.nama_custom_bib || '-'}
+          - Email: ${data.email}
+          - No HP: ${data.nomor_hp}
+          - Kategori Tiket: ${data.jenis_promosi}
+          - Nominal Bayar: Rp ${data.nominal_bayar.toLocaleString('id-ID')}
 
-Detail Data:
-- NO REG: ${data.nomor_registrasi}
-- NO BIB: ${data.nomor_bib}
-- Nama Lengkap: ${data.nama_lengkap}
-- Nama Custom BIB: ${data.nama_custom_bib || '-'}
-- Jenis Kelamin: ${data.jenis_kelamin}
-- Email: ${data.email}
-- No HP: ${data.nomor_hp}
-- Kategori Tiket: ${data.jenis_promosi}
-- Nominal Bayar: Rp ${data.nominal_bayar.toLocaleString('id-ID')}
-
-Saya sudah mentransfer sesuai nominal dan mengunggah bukti pembayaran di website. Mohon segera diverifikasi. Terima kasih!`;
+          Saya sudah mentransfer sesuai nominal dan mengunggah bukti pembayaran setelah ini. Mohon segera diverifikasi. Terima kasih!`;
 
       const waUrl = `https://wa.me/${WA_ADMIN_NUMBER}?text=${encodeURIComponent(message)}`;
       window.open(waUrl, '_blank');
@@ -502,7 +634,9 @@ Saya sudah mentransfer sesuai nominal dan mengunggah bukti pembayaran di website
   }
 }
 
+// ==========================================
 // RENDER INFORMASI HALAMAN KONFIRMASI SUKSES & BIB CARD SVG
+// ==========================================
 function renderConfirmationDetails() {
   const data = state.registrationData;
   if (!data) return;
@@ -523,8 +657,8 @@ function renderConfirmationDetails() {
   document.getElementById('confirm-total').textContent = fmt(data.nominal_bayar);
 
   // Render BIBCard SVG Dinamis
-  const bibDisplayName = data.nama_custom_bib && data.nama_custom_bib.trim() !== '' 
-    ? data.nama_custom_bib.toUpperCase() 
+  const bibDisplayName = data.nama_custom_bib && data.nama_custom_bib.trim() !== ''
+    ? data.nama_custom_bib.toUpperCase()
     : data.nama_lengkap.split(' ').slice(0, 2).join(' ').toUpperCase();
 
   // Set nomor BIB & nama pelari di dalam SVG
@@ -533,8 +667,8 @@ function renderConfirmationDetails() {
 
   if (svgBibNumberEl) svgBibNumberEl.textContent = data.nomor_bib;
   if (svgRunnerNameEl) {
-    svgRunnerNameEl.textContent = bibDisplayName.length > 14 
-      ? bibDisplayName.substring(0, 14) + '…' 
+    svgRunnerNameEl.textContent = bibDisplayName.length > 14
+      ? bibDisplayName.substring(0, 14) + '…'
       : bibDisplayName;
   }
 }

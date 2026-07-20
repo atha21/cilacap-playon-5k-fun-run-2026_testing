@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antrean Penuh — Cilacap Playon 2026</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Nunito:wght@400;600;700;800&family=Satisfy&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandPink: '#E6748E',
+            brandPinkLight: '#F5C8D4',
+            brandTeal: '#6BB1AD',
+            brandTealDark: '#4A8E8A',
+            brandCream: '#EDECDB',
+            brandCreamDark: '#E0DEC9',
+            brandMelon: '#E5A9A9',
+            brandDark: '#2A2A2A',
+            brandWhite: '#FFFFFF'
+          },
+          fontFamily: {
+            title: ['Barlow Condensed', 'sans-serif'],
+            body: ['Nunito', 'sans-serif'],
+            satisfy: ['Satisfy', 'cursive']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .bg-halftone {
+      background-image: radial-gradient(rgba(200, 184, 154, 0.25) 1.5px, transparent 1.5px);
+      background-size: 14px 14px;
+    }
+  </style>
+</head>
+<body class="bg-brandCream text-brandDark font-body antialiased flex items-center justify-center min-h-screen relative overflow-hidden bg-halftone">
+  
+  <!-- Background Design Element like landing-page Hero/Aesthetic -->
+  <div class="absolute inset-0 z-0 pointer-events-none">
+    <div class="absolute top-0 right-0 w-64 h-full overflow-hidden opacity-70">
+      <svg width="240" height="100%" viewBox="0 0 240 800" preserveAspectRatio="none">
+        <polygon points="240,0 100,0 240,200" fill="#E6748E" opacity="0.4" />
+        <polygon points="240,160 140,0 240,0" fill="#6BB1AD" opacity="0.3" />
+        <polygon points="240,240 60,160 240,400" fill="#F5C8D4" opacity="0.3" />
+        <polygon points="240,440 120,360 240,600" fill="#E5A9A9" opacity="0.25" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="relative z-10 max-w-md w-full mx-6 bg-[#EDECDB]/90 backdrop-blur-md p-8 border border-brandPinkLight/60 shadow-xl text-center">
+    <!-- Header Logo -->
+    <div class="flex justify-center mb-6">
+      <img src="./design-source/assets/logo.jpeg" alt="Logo Cilacap Playon" class="h-12 w-auto object-contain" />
+    </div>
+
+    <!-- Alert / Heavy Load Icon -->
+    <div class="w-16 h-16 bg-brandPink/10 text-brandPink mx-auto flex items-center justify-center rounded-full mb-6">
+      <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+    </div>
+
+    <!-- Content -->
+    <h1 class="font-title font-black text-2xl uppercase tracking-wider text-brandDark mb-3">Antrean Sedang Penuh</h1>
+    <p class="text-sm text-neutral-600 leading-relaxed mb-8">
+      Antrean pendaftaran sedang penuh karena antusiasme yang tinggi. Mohon tunggu sebentar ya, slot masih tersedia!
+    </p>
+
+    <!-- Retry Button with Countdown -->
+    <button
+      id="btn-retry"
+      disabled
+      class="group w-full bg-gradient-to-r from-brandPink to-brandMelon hover:from-[#D05570] hover:to-[#D58C8C] disabled:from-neutral-300 disabled:to-neutral-300 disabled:text-neutral-500 disabled:cursor-not-allowed text-brandWhite py-4 px-6 font-title font-bold tracking-[0.15em] text-sm transition-all duration-300 cursor-pointer text-center shadow-md relative overflow-hidden flex items-center justify-center uppercase"
+    >
+      <span id="btn-text">Coba Lagi (10s)</span>
+    </button>
+  </div>
+
+  <script>
+    const retryBtn = document.getElementById('btn-retry');
+    const btnText = document.getElementById('btn-text');
+    let countdown = 10;
+
+    const timer = setInterval(() => {
+      countdown--;
+      if (countdown > 0) {
+        btnText.textContent = `Coba Lagi (${countdown}s)`;
+      } else {
+        clearInterval(timer);
+        retryBtn.disabled = false;
+        btnText.textContent = 'Coba Lagi';
+      }
+    }, 1000);
+
+    retryBtn.addEventListener('click', () => {
+      window.location.href = 'index.html#daftar';
+    });
+  </script>
+</body>
+</html>
