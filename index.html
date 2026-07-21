@@ -66,7 +66,7 @@
           <a href="#tentang" class="hover:text-brandPink transition-colors">TENTANG</a>
           <a href="#rute" class="hover:text-brandPink transition-colors">RUTE</a>
           <a href="#fasilitas" class="hover:text-brandPink transition-colors">FASILITAS</a>
-          <a href="#daftar" class="hover:text-brandPink transition-colors">DAFTAR</a>
+          <a href="#daftar" class="hover:text-brandPink transition-colors">REGISTRASI</a>
           <a href="#kontak" class="hover:text-brandPink transition-colors">KONTAK</a>
         </div>
       </div>
@@ -94,17 +94,19 @@
             </svg>
           </div>
 
-          <p class="font-title font-bold text-xs tracking-[0.22em] text-brandTeal mb-2">
+          <p class="font-title font-bold text-xs tracking-[0.22em] text-[#C84B68] mb-2">
             CILACAP — 20 SEPTEMBER 2026
           </p>
           <div class="mb-3">
-            <span class="font-title italic font-normal text-2xl text-brandTealDark">Cilacap</span><br />
-            <span class="font-title font-black text-6xl sm:text-7xl leading-[0.85] text-brandPink block">PLAYON</span>
-            <span class="font-title font-black text-2xl sm:text-3xl text-brandPink tracking-wide block mt-1">
-              5K FUN RUN
+            <span class="font-title italic font-bold text-2xl text-brandTealDark">Cilacap</span><br />
+            <span class="font-title font-black text-6xl sm:text-7xl leading-[0.85] block">
+              <span class="text-brandPink">PLAY</span><span class="text-brandTealDark">ON</span>
+            </span>
+            <span class="font-title font-black text-2xl sm:text-3xl tracking-wide block mt-1">
+              <span class="text-brandTealDark">5K</span> <span class="text-brandPink">FUN RUN</span>
             </span>
           </div>
-          <p class="font-body text-sm text-brandTealDark font-semibold italic mb-6">
+          <p class="font-body text-sm text-[#C84B68] font-extrabold italic mb-6">
             make your fun running on!
           </p>
           <div class="flex flex-wrap gap-3">
@@ -115,7 +117,7 @@
             </button>
             <a
               href="#tentang"
-              class="border-2 border-brandTeal text-brandTeal hover:bg-brandTeal hover:text-brandWhite px-8 py-3.5 font-title font-extrabold text-base tracking-widest transition-all cursor-pointer inline-block text-center"
+              class="border-2 border-[#C84B68] text-[#C84B68] hover:bg-[#C84B68] hover:text-brandWhite px-8 py-3.5 font-title font-extrabold text-base tracking-widest transition-all cursor-pointer inline-block text-center shadow-sm"
             >
               SELENGKAPNYA
             </a>
@@ -197,7 +199,9 @@
             <span class="font-title font-bold text-xs tracking-widest text-brandPink uppercase">TENTANG EVENT</span>
           </div>
           <h2 class="font-title font-black text-4xl sm:text-5xl uppercase leading-[1.05] text-[#2A2A2A] mb-6">
-            <span class="text-brandPink">CILACAP</span><br />PLAYON 5K<br /><span class="text-brandTeal">FUN RUN</span>
+            <span class="text-brandTeal">CILACAP</span><br />
+            <span class="block"><span class="text-brandPink">PLAY</span><span class="text-brandTeal">ON</span></span>
+            <span class="block"><span class="text-brandTeal">5K</span> <span class="text-brandPink">FUN RUN</span></span>
           </h2>
           <p class="text-sm text-brandDark/80 leading-relaxed mb-4">
             Kesehatan merupakan salah satu aset paling berharga dalam kehidupan manusia. Di tengah kesibukan harian, menjaga kebugaran tubuh melalui olahraga yang teratur seringkali terlupakan.
@@ -225,12 +229,20 @@
 
     <!-- RANGKAIAN KEGIATAN -->
     <section class="bg-brandCreamDark py-20 px-6 relative overflow-hidden">
-      <!-- Left & Right Geometric Accent -->
+      <!-- Left Geometric Accent -->
       <div class="absolute top-0 left-0 w-24 h-full pointer-events-none overflow-hidden">
         <svg width="120" height="100%" viewBox="0 0 120 400" preserveAspectRatio="none">
           <polygon points="0,0 70,0 0,100" fill="#6BB1AD" opacity="0.7" />
           <polygon points="0,80 50,0 0,0" fill="#E6748E" opacity="0.5" />
           <polygon points="0,120 90,80 0,200" fill="#E5A9A9" opacity="0.5" />
+        </svg>
+      </div>
+      <!-- Right Geometric Accent -->
+      <div class="absolute top-0 right-0 w-24 h-full pointer-events-none overflow-hidden">
+        <svg width="120" height="100%" viewBox="0 0 120 400" preserveAspectRatio="none">
+          <polygon points="120,0 50,0 120,100" fill="#6BB1AD" opacity="0.6" />
+          <polygon points="120,80 70,0 120,0" fill="#E6748E" opacity="0.4" />
+          <polygon points="120,140 30,90 120,220" fill="#E5A9A9" opacity="0.45" />
         </svg>
       </div>
 
@@ -240,7 +252,7 @@
           <span class="font-title font-bold text-xs tracking-widest text-brandPink uppercase">RANGKAIAN KEGIATAN</span>
         </div>
         <h2 class="font-title font-black text-4xl sm:text-5xl uppercase leading-[1.05] text-[#2A2A2A] mb-10">
-          APA SAJA YANG <span class="text-brandPink">AKAN TERJADI?</span>
+          <span class="text-brandPink">RANGKAIAN KEGIATAN</span> <span class="text-brandTeal">CILACAP PLAYON</span>
         </h2>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -264,13 +276,30 @@
     </section>
 
     <!-- RUTE -->
-    <section id="rute" class="py-20 px-6 max-w-6xl mx-auto">
+    <section id="rute" class="py-20 px-6 relative overflow-hidden">
+      <!-- Left Geometric Accent (minimalis) -->
+      <div class="absolute top-0 left-0 w-16 h-full pointer-events-none overflow-hidden opacity-40">
+        <svg width="64" height="100%" viewBox="0 0 64 500" preserveAspectRatio="none">
+          <line x1="0" y1="0" x2="64" y2="120" stroke="#C84B68" stroke-width="1.5" />
+          <line x1="0" y1="60" x2="64" y2="200" stroke="#6BB1AD" stroke-width="1" />
+          <line x1="0" y1="160" x2="64" y2="280" stroke="#C84B68" stroke-width="1" />
+        </svg>
+      </div>
+      <!-- Right Geometric Accent (minimalis) -->
+      <div class="absolute top-0 right-0 w-16 h-full pointer-events-none overflow-hidden opacity-40">
+        <svg width="64" height="100%" viewBox="0 0 64 500" preserveAspectRatio="none">
+          <line x1="64" y1="0" x2="0" y2="120" stroke="#C84B68" stroke-width="1.5" />
+          <line x1="64" y1="60" x2="0" y2="200" stroke="#6BB1AD" stroke-width="1" />
+          <line x1="64" y1="160" x2="0" y2="280" stroke="#C84B68" stroke-width="1" />
+        </svg>
+      </div>
+      <div class="max-w-6xl mx-auto relative z-10">
       <div class="flex items-center gap-3 mb-5">
         <div class="w-8 h-1 bg-brandPink rounded"></div>
         <span class="font-title font-bold text-xs tracking-widest text-brandPink uppercase">PETA RUTE</span>
       </div>
       <h2 class="font-title font-black text-4xl sm:text-5xl uppercase leading-[1.05] text-[#2A2A2A] mb-10">
-        RACE TRACK 
+        <span class="text-brandPink">RACE TRACK</span>
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
@@ -309,6 +338,7 @@
           </div>
           <p class="text-xs text-neutral-400 mt-4 leading-relaxed">* Rute lari bersifat final, penunjuk arah dan panitia marshal akan siaga di titik persimpangan utama.</p>
         </div>
+      </div>
       </div>
     </section>
 
@@ -357,7 +387,7 @@
           <span class="font-title font-bold text-xs tracking-widest text-[#FFFFFF]/80 uppercase">FASILITAS PESERTA</span>
         </div>
         <h2 class="font-title font-black text-4xl sm:text-5xl uppercase leading-[1.05] text-brandWhite mb-12">
-          YANG AKAN <span class="text-brandCream">KAMU DAPATKAN</span>
+          <span class="text-brandWhite">FASILITAS</span> <span class="text-brandCream">CILACAP PLAYON</span>
         </h2>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -407,11 +437,6 @@
               <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">Refreshment Area</p>
               <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Akses masuk ke area penyegaran khusus peserta.</p>
             </div>
-            <div class="bg-brandWhite/10 p-4 border border-brandWhite/20 shadow-sm transition-all hover:bg-brandWhite/15">
-              <span class="text-2xl">📸</span>
-              <p class="font-title font-bold text-sm text-brandCream mt-1 uppercase">File Dokumentasi</p>
-              <p class="text-[11px] text-brandWhite/70 mt-1 leading-snug">Foto & dokumentasi kegiatan gratis yang bisa diunduh.</p>
-            </div>
           </div>
           <div>
             <img
@@ -425,9 +450,31 @@
     </section>
 
     <!-- HARGA TIKET & DAFTAR -->
-    <section id="daftar" class="relative bg-brandCreamDark bg-cover bg-center py-20 px-6" style="background-image: var(--landing-ticket-bg);">
-      <div class="absolute inset-0 bg-brandCreamDark/85 pointer-events-none"></div>
-      <div class="relative max-w-6xl mx-auto flex flex-col items-center">
+    <section id="daftar" class="relative bg-brandCreamDark bg-cover bg-center py-20 px-6 backdrop-blur-sm overflow-hidden" style="background-image: var(--landing-ticket-bg);">
+      <!-- Overlay Blur Background -->
+      <div class="absolute inset-0 bg-brandCreamDark/45 backdrop-blur-[6px] pointer-events-none z-0"></div>
+      
+      <!-- Section Level Geometric Decoration Top Right -->
+      <div class="absolute top-0 right-0 w-48 sm:w-64 h-full pointer-events-none overflow-hidden z-0 opacity-70">
+        <svg width="100%" height="100%" viewBox="0 0 240 600" preserveAspectRatio="none">
+          <polygon points="240,0 90,0 240,160" fill="#E6748E" opacity="0.6" />
+          <polygon points="240,120 130,0 240,0" fill="#6BB1AD" opacity="0.45" />
+          <polygon points="240,180 60,120 240,320" fill="#F5C8D4" opacity="0.5" />
+          <polygon points="240,340 110,280 240,480" fill="#E5A9A9" opacity="0.4" />
+        </svg>
+      </div>
+
+      <!-- Section Level Geometric Decoration Bottom Left -->
+      <div class="absolute bottom-0 left-0 w-48 sm:w-64 h-full pointer-events-none overflow-hidden z-0 opacity-70">
+        <svg width="100%" height="100%" viewBox="0 0 240 600" preserveAspectRatio="none">
+          <polygon points="0,600 150,600 0,440" fill="#6BB1AD" opacity="0.5" />
+          <polygon points="0,480 110,600 0,600" fill="#E6748E" opacity="0.6" />
+          <polygon points="0,420 180,480 0,280" fill="#F5C8D4" opacity="0.45" />
+          <polygon points="0,260 130,320 0,120" fill="#E5A9A9" opacity="0.4" />
+        </svg>
+      </div>
+
+      <div class="relative z-10 max-w-6xl mx-auto flex flex-col items-center">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-8 h-1 bg-brandPink rounded"></div>
           <span class="font-title font-bold text-xs tracking-widest text-brandPink uppercase">REGISTRASI</span>
@@ -437,28 +484,41 @@
         </h2>
 
         <!-- TICKET BOX CARD -->
-        <div class="relative bg-brandWhite p-8 border border-brandPinkLight max-w-md w-full shadow-lg overflow-hidden">
+        <div class="relative bg-brandWhite/95 backdrop-blur-md p-8 border border-brandPinkLight max-w-md w-full shadow-xl overflow-hidden">
           <!-- Top Accent Ribbon -->
           <div class="absolute top-0 left-0 w-full h-1.5 bg-brandPink"></div>
           
-          <div class="text-center mb-6">
-            <span id="landing-promo-badge" class="bg-brandPinkLight text-brandPink font-title font-black text-xs px-3 py-1 uppercase tracking-wider">
-              PROMO EARLY BIRD
-            </span>
-            <h3 class="font-title font-black text-3xl text-brandDark uppercase mt-4">5K FUN RUN</h3>
-            <p class="text-xs text-neutral-400 mt-1">Tersedia kuota terbatas hingga 31 Agustus 2026</p>
+          <!-- Geometric Decoration Top Right di Card (Dipertahankan) -->
+          <div class="absolute top-0 right-0 w-24 h-full pointer-events-none overflow-hidden z-0">
+            <svg width="120" height="100%" viewBox="0 0 120 400" preserveAspectRatio="none">
+              <polygon points="120,0 50,0 120,100" fill="#E6748E" opacity="0.6" />
+              <polygon points="120,80 70,0 120,0" fill="#6BB1AD" opacity="0.4" />
+              <polygon points="120,120 30,80 120,200" fill="#F5C8D4" opacity="0.4" />
+              <polygon points="120,220 60,180 120,300" fill="#E5A9A9" opacity="0.3" />
+            </svg>
           </div>
 
-          <div class="border-y border-brandCreamDark py-6 mb-6 flex flex-col items-center">
+          <div class="relative z-10 text-center mb-6">
+            <span id="landing-promo-badge" class="bg-brandPinkLight text-brandPink font-title font-black text-xs px-3 py-1 uppercase tracking-wider inline-block">
+              PROMO EARLY BIRD
+            </span>
+            <h3 class="font-title font-black text-3xl text-brandPink uppercase mt-3">5K FUN RUN</h3>
+            <p class="text-sm font-bold text-[#6BB1AD] mt-1.5">Tersedia kuota terbatas hingga 31 Agustus 2026</p>
+          </div>
+
+          <div class="relative z-10 border-y border-brandCreamDark py-6 mb-6 flex flex-col items-center">
             <div class="flex items-baseline gap-2.5">
               <span id="landing-promo-price" class="font-title font-black text-4xl text-brandPink">Rp 85.000</span>
               <span id="landing-normal-price" class="text-sm text-neutral-400 line-through">Rp 100.000</span>
             </div>
-            <p id="landing-savings-text" class="text-[11px] text-brandTealDark font-semibold mt-1">Hemat Rp 15.000 dari harga tiket normal</p>
+            <p id="landing-savings-text" class="text-[11px] text-[#6BB1AD] font-bold mt-1">Hemat Rp 15.000 dari harga tiket normal</p>
+            <p id="landing-promo-period" class="font-title font-extrabold text-xs text-brandPink tracking-wider uppercase mt-2.5 bg-brandPinkLight/40 px-3 py-1">
+              TERSEDIA 1 AGUSTUS – 15 AGUSTUS 2026
+            </p>
           </div>
 
           <button
-            class="btn-go-daftar w-full bg-brandPink hover:bg-[#D05570] text-brandWhite py-4 font-title font-extrabold text-base tracking-widest transition-colors cursor-pointer shadow-sm text-center uppercase"
+            class="relative z-10 btn-go-daftar w-full bg-brandPink hover:bg-[#D05570] text-brandWhite py-4 font-title font-extrabold text-base tracking-widest transition-colors cursor-pointer shadow-sm text-center uppercase"
           >
             AMBIL TIKET SEKARANG
           </button>
@@ -496,8 +556,43 @@
         </div>
       </div>
       
-      <div class="border-t border-brandPinkLight/30 py-6 text-center text-[10px] font-title tracking-[0.15em] text-neutral-500 bg-[#E8E7D3]/40">
-        © 2026 CILACAP PLAYON · POWERED BY ARKASA CREATIVE PARTNER
+      <!-- Footer Copyright with Pine Tree Accents -->
+      <div class="border-t border-brandPinkLight/30 bg-[#E8E7D3]/40 relative overflow-hidden">
+        <!-- Pine trees row (decorative) -->
+        <div class="absolute bottom-0 left-0 right-0 leading-[0] pointer-events-none">
+          <svg viewBox="0 0 1200 48" preserveAspectRatio="none" class="w-full h-[40px]" xmlns="http://www.w3.org/2000/svg">
+            <!-- Pinus kiri — teal -->
+            <g fill="#6BB1AD" opacity="0.55">
+              <path d="M 18,4 L 6,22 11,22 6,34 12,34 6,48 30,48 24,34 30,34 25,22 30,22 Z" />
+              <path d="M 58,8 L 48,24 52,24 48,36 53,36 48,48 68,48 63,36 68,36 64,24 68,24 Z" />
+              <path d="M 96,2 L 84,22 90,22 84,35 91,35 84,48 108,48 101,35 108,35 102,22 108,22 Z" />
+              <path d="M 132,10 L 122,26 126,26 122,37 127,37 122,48 142,48 137,37 142,37 138,26 142,26 Z" />
+            </g>
+            <!-- Pinus kiri — pink (variasi) -->
+            <g fill="#E6748E" opacity="0.35">
+              <path d="M 38,12 L 30,26 34,26 30,36 34,36 30,48 46,48 42,36 46,36 42,26 46,26 Z" />
+              <path d="M 114,6 L 106,22 110,22 106,34 110,34 106,48 122,48 118,34 122,34 118,22 122,22 Z" />
+            </g>
+
+            <!-- Pinus kanan — teal -->
+            <g fill="#6BB1AD" opacity="0.55">
+              <path d="M 1182,4 L 1194,22 1189,22 1194,34 1188,34 1194,48 1170,48 1176,34 1170,34 1175,22 1170,22 Z" />
+              <path d="M 1142,8 L 1152,24 1148,24 1152,36 1147,36 1152,48 1132,48 1137,36 1132,36 1136,24 1132,24 Z" />
+              <path d="M 1104,2 L 1116,22 1110,22 1116,35 1109,35 1116,48 1092,48 1099,35 1092,35 1098,22 1092,22 Z" />
+              <path d="M 1068,10 L 1078,26 1074,26 1078,37 1073,37 1078,48 1058,48 1063,37 1058,37 1062,26 1058,26 Z" />
+            </g>
+            <!-- Pinus kanan — pink (variasi) -->
+            <g fill="#E6748E" opacity="0.35">
+              <path d="M 1162,12 L 1170,26 1166,26 1170,36 1166,36 1170,48 1154,48 1158,36 1154,36 1158,26 1154,26 Z" />
+              <path d="M 1086,6 L 1094,22 1090,22 1094,34 1090,34 1094,48 1078,48 1082,34 1078,34 1082,22 1078,22 Z" />
+            </g>
+          </svg>
+        </div>
+
+        <!-- Copyright text -->
+        <div class="relative z-10 py-5 text-center text-[10px] font-title tracking-[0.15em] text-neutral-500">
+          © 2026 CILACAP PLAYON · POWERED BY ARKASA CREATIVE PARTNER
+        </div>
       </div>
     </section>
   </div>

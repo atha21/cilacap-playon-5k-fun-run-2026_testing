@@ -14,9 +14,9 @@ const CONFIG_TESTING = {
 };
 
 const CONFIG_PRODUCTION = {
-  SUPABASE_URL: "https://your-supabase-production-project.supabase.co",
-  SUPABASE_ANON_KEY: "your-production-anon-key",
-  WA_ADMIN: "6282265056823" // sementara disamakan dengan testing
+  SUPABASE_URL: "https://stzyvgwxhrqacyjkbwrm.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0enl2Z3d4aHJxYWN5amtid3JtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4OTI4MDQsImV4cCI6MjA5OTQ2ODgwNH0.2SNFGFCXGaygTkIaWK8bnsMFwv5gAC4SGtji3XHXH5U",
+  WA_ADMIN: "082177378090"
 };
 
 // Ambil konfigurasi aktif berdasarkan status IS_PRODUCTION
@@ -53,6 +53,7 @@ function getPromoDetails() {
   let type = 'Normal';
   let price = 175000;
   let qrImage = 'qristest.jpeg';
+  let period = 'REGULER PERIODE';
 
   // Ketentuan di tahun 2026
   if (year === 2026) {
@@ -60,14 +61,18 @@ function getPromoDetails() {
       type = 'Super Early Bird';
       price = 150000;
       qrImage = 'qristest.jpeg';
+      period = 'TERSEDIA 20 JULI - 31 JULI 2026';
     } else if (month === 8 && date >= 1 && date <= 15) {
       type = 'Early Bird';
       price = 165000;
       qrImage = 'qristest.jpeg'; // disesuaikan dengan ejaan file di folder assets
+      period = 'TERSEDIA 1 AGUSTUS - 15 AGUSTUS 2026';
+    } else {
+      period = 'TERSEDIA 16 AGUSTUS - 31 AGUSTUS 2026';
     }
   }
 
-  return { type, price, qrImage };
+  return { type, price, qrImage, period };
 }
 
 // ==========================================
@@ -177,11 +182,13 @@ function updateLandingTicketCard() {
   const NORMAL_PRICE = 175000; // Harga normal sebagai pembanding
 
   const badgeEl = document.getElementById('landing-promo-badge');
+  const periodEl = document.getElementById('landing-promo-period');
   const priceEl = document.getElementById('landing-promo-price');
   const normalPriceEl = document.getElementById('landing-normal-price');
   const savingsEl = document.getElementById('landing-savings-text');
 
   if (badgeEl) badgeEl.textContent = `PROMO ${promo.type.toUpperCase()}`;
+  if (periodEl) periodEl.textContent = promo.period;
   if (priceEl) priceEl.textContent = fmt(promo.price);
 
   if (promo.type === 'Normal') {
