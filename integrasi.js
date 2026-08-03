@@ -1,8 +1,8 @@
 // ==========================================
 // ⚙️ PENGATURAN UTAMA SUPABASE
 // ==========================================
-var SUPABASE_URL = "https://stzyvgwxhrqacyjkbwrm.supabase.co"; 
-var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0enl2Z3d4aHJxYWN5amtid3JtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4Mzg5MjgwNCwiZXhwIjoyMDk5NDY4ODA0fQ.CPXJV0gtyzjaQ8qD2Fx0pzzx3jOt79Yej7LgMwx2ytQ";   
+var SUPABASE_URL = "pppp"; 
+var SUPABASE_KEY = "pppp";   
 var NAMA_TABEL_SUPABASE = "pendaftar_running";            
 
 // ==========================================
