@@ -163,10 +163,27 @@ function calcAge(dobString) {
 
 // NAVIGASI STATE SPA
 function updatePromoSummary() {
-  const promo = getPromoDetails();
+  const categoryEl = document.getElementById('select-category');
+  const studentNoteEl = document.getElementById('student-card-note');
+  
+  let promo = getPromoDetails();
+  
+  // Jika memilih kategori PELAJAR, override jenis promosi dan harga
+  if (categoryEl && categoryEl.value === 'PELAJAR') {
+    promo = {
+      type: 'Pelajar',
+      price: 150000,
+      qrImage: 'qrisfix.jpeg',
+      period: 'KATEGORI PELAJAR'
+    };
+    if (studentNoteEl) studentNoteEl.classList.remove('hidden');
+  } else {
+    if (studentNoteEl) studentNoteEl.classList.add('hidden');
+  }
+
   const promoTypeEl = document.getElementById('summary-promo-type');
   const promoTotalEl = document.getElementById('summary-total');
-  if (promoTypeEl) promoTypeEl.textContent = promo.type;
+  if (promoTypeEl) promoTypeEl.textContent = promo.type.toUpperCase();
   if (promoTotalEl) promoTotalEl.textContent = fmt(promo.price);
 
   // Update gambar QRIS di UI
@@ -249,7 +266,8 @@ function navigatePage(newPage, options = { push: true }) {
     window.history.replaceState(stateObject, '', window.location.pathname);
   }
 
-  window.scrollTo(0, 0);
+  // Instant scroll to top without smooth behavior
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   renderPage();
 }
 
@@ -259,6 +277,68 @@ function resetRegistrationForm() {
   document.getElementById('submit-reg-btn').disabled = true;
   document.getElementById('age-display-text').textContent = '';
   document.getElementById('bib-preview-text').textContent = '';
+  
+  // Reset proof upload preview
+  const proofInput = document.getElementById('input-payment-proof');
+  const previewContainer = document.getElementById('proof-preview-container');
+  const previewImg = document.getElementById('proof-preview-img');
+  const fileInfo = document.getElementById('proof-file-info');
+  if (proofInput) proofInput.value = '';
+  if (previewImg) previewImg.src = '';
+  if (fileInfo) fileInfo.textContent = '';
+  if (previewContainer) previewContainer.classList.add('hidden');
+}
+
+// HELPER FUNCTION: CLIENT-SIDE IMAGE COMPRESSION USING HTML5 CANVAS
+// Target: max width 1000px, quality 0.7 (JPEG), output File ~100KB-150KB
+function compressImage(file, options = { maxWidth: 1000, quality: 0.7 }) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith('image/')) {
+      return reject(new Error("File yang dipilih bukan gambar valid."));
+    }
+
+    const reader = new FileReader();
+    reader.onerror = (err) => reject(err);
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = (err) => reject(err);
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > options.maxWidth) {
+          height = Math.round((height * options.maxWidth) / width);
+          width = options.maxWidth;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#FFFFFF'; // Background putih untuk JPEG
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              return reject(new Error("Gagal mengompres gambar."));
+            }
+            const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpeg", {
+              type: 'image/jpeg',
+              lastModified: Date.now()
+            });
+            resolve(compressedFile);
+          },
+          'image/jpeg',
+          options.quality
+        );
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 // ==========================================
@@ -336,11 +416,73 @@ function setupNavigation() {
 function setupFormHandlers() {
   const form = document.getElementById('reg-form');
   const submitBtn = document.getElementById('submit-reg-btn');
+  const originalSubmitHTML = submitBtn.innerHTML;
+
+  // Modal Peringatan Elements
+  const modalWarning = document.getElementById('modal-warning');
+  const btnModalCancel = document.getElementById('btn-modal-cancel');
+  const btnModalAgree = document.getElementById('btn-modal-agree');
+
+  // Payment Proof Elements
+  const proofInput = document.getElementById('input-payment-proof');
+  const btnSelectProof = document.getElementById('btn-select-proof');
+  const previewContainer = document.getElementById('proof-preview-container');
+  const previewImg = document.getElementById('proof-preview-img');
+  const fileInfo = document.getElementById('proof-file-info');
+  const btnRemoveProof = document.getElementById('btn-remove-proof');
+
+  if (btnSelectProof && proofInput) {
+    btnSelectProof.addEventListener('click', () => proofInput.click());
+    proofInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        if (!file.type.startsWith('image/')) {
+          alert('File harus berupa gambar (JPG, PNG, dll).');
+          proofInput.value = '';
+          return;
+        }
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        fileInfo.textContent = `${file.name} (${sizeMB} MB)`;
+        const objectUrl = URL.createObjectURL(file);
+        previewImg.src = objectUrl;
+        previewContainer.classList.remove('hidden');
+      } else {
+        previewContainer.classList.add('hidden');
+      }
+      checkFormValidity();
+    });
+  }
+
+  if (btnRemoveProof) {
+    btnRemoveProof.addEventListener('click', () => {
+      proofInput.value = '';
+      previewImg.src = '';
+      fileInfo.textContent = '';
+      previewContainer.classList.add('hidden');
+      checkFormValidity();
+    });
+  }
+
+  // Helper untuk reset state tombol ke aktif/normal
+  function resetSubmitButtonState() {
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = '';
+    submitBtn.style.cursor = '';
+    submitBtn.innerHTML = originalSubmitHTML;
+    checkFormValidity();
+  }
+
+  // Helper untuk set state tombol ke Loading/Disable
+  function setSubmitButtonLoading() {
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.5';
+    submitBtn.style.cursor = 'not-allowed';
+    submitBtn.innerHTML = '<span class="relative z-10 flex items-center gap-2"><span>MEMPROSES...</span></span>';
+  }
 
   // ==========================================
   // DYNAMIC HONEYPOT INJECTION
   // ==========================================
-  // Membuat container honeypot yang disembunyikan secara visual namun ramah bot
   const honeypotContainer = document.createElement('div');
   honeypotContainer.style.opacity = '0';
   honeypotContainer.style.position = 'absolute';
@@ -351,7 +493,6 @@ function setupFormHandlers() {
   honeypotContainer.setAttribute('tabindex', '-1');
   honeypotContainer.setAttribute('aria-hidden', 'true');
 
-  // Input jebakan 1: Konfirmasi email tambahan
   const honeyEmail = document.createElement('input');
   honeyEmail.type = 'text';
   honeyEmail.name = 'sub_email_confirmation';
@@ -359,7 +500,6 @@ function setupFormHandlers() {
   honeyEmail.autocomplete = 'off';
   honeyEmail.setAttribute('tabindex', '-1');
 
-  // Input jebakan 2: Nomor HP alternatif
   const honeyPhone = document.createElement('input');
   honeyPhone.type = 'text';
   honeyPhone.name = 'phone_alternative';
@@ -394,7 +534,6 @@ function setupFormHandlers() {
     if (bibVal !== '') {
       bibPreviewText.textContent = `Nama di BIB: ${bibVal.toUpperCase()}`;
     } else if (nameVal !== '') {
-      // Ambil maksimal 2 kata pertama
       const words = nameVal.split(' ').slice(0, 2).join(' ').toUpperCase();
       bibPreviewText.textContent = `Nama di BIB: ${words}`;
     } else {
@@ -405,7 +544,6 @@ function setupFormHandlers() {
   nameInput.addEventListener('input', updateBIBPreview);
   bibNameInput.addEventListener('input', updateBIBPreview);
 
-  // Enforce numeric-only for phone inputs and wire validation listeners
   const phoneInputEl = document.getElementById('input-phone');
   const emergencyPhoneEl = document.getElementById('input-emergency-phone');
 
@@ -422,8 +560,7 @@ function setupFormHandlers() {
   stripNonDigits(phoneInputEl);
   stripNonDigits(emergencyPhoneEl);
 
-  // Required fields (medical history is optional)
-  const requiredInputs = ['input-name', 'input-email', 'input-phone', 'select-gender', 'select-jersey-size', 'input-emergency-name', 'input-emergency-relation', 'input-emergency-phone', 'select-blood-type'];
+  const requiredInputs = ['input-name', 'input-email', 'input-phone', 'select-gender', 'select-category', 'select-jersey-size', 'input-emergency-name', 'input-emergency-relation', 'input-emergency-phone', 'select-blood-type'];
   requiredInputs.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -431,21 +568,29 @@ function setupFormHandlers() {
     el.addEventListener('change', checkFormValidity);
   });
 
-  // Validasi form: semua field wajib terisi sebelum tombol submit aktif
+  // Hubungkan select-category ke updatePromoSummary
+  const categoryEl = document.getElementById('select-category');
+  if (categoryEl) {
+    categoryEl.addEventListener('change', updatePromoSummary);
+  }
+
+  // Validasi form: semua field wajib terisi + foto bukti bayar terupload
   function checkFormValidity() {
     const name = nameInput.value.trim();
     const email = document.getElementById('input-email').value.trim();
     const phone = document.getElementById('input-phone').value.trim();
     const gender = document.getElementById('select-gender').value;
+    const category = categoryEl ? categoryEl.value : '';
     const emergencyName = document.getElementById('input-emergency-name').value.trim();
     const emergencyRelation = document.getElementById('input-emergency-relation').value.trim();
     const emergencyPhone = document.getElementById('input-emergency-phone').value.trim();
     const bloodType = document.getElementById('select-blood-type').value;
+    const hasProofFile = proofInput && proofInput.files && proofInput.files.length > 0;
 
     const phoneIsDigits = phone !== '' && /^\d+$/.test(phone);
     const emergencyPhoneIsDigits = emergencyPhone !== '' && /^\d+$/.test(emergencyPhone);
 
-    const allValid = name && email && phoneIsDigits && gender && emergencyName && emergencyRelation && emergencyPhoneIsDigits && bloodType;
+    const allValid = name && email && phoneIsDigits && gender && category && emergencyName && emergencyRelation && emergencyPhoneIsDigits && bloodType && hasProofFile;
     submitBtn.disabled = !allValid;
   }
 
@@ -477,11 +622,19 @@ function setupFormHandlers() {
     });
   }
 
-  // ==========================================
-  // SUBMIT DATA KE SUPABASE
-  // (Anti-Spam Click + Circuit Breaker Timeout 15 detik)
-  // ==========================================
-  form.addEventListener('submit', async (e) => {
+  // LOGIKA MODAL PERINGATAN REGISTRASI
+  btnModalCancel.addEventListener('click', () => {
+    modalWarning.classList.add('hidden');
+    resetSubmitButtonState();
+  });
+
+  btnModalAgree.addEventListener('click', async () => {
+    modalWarning.classList.add('hidden');
+    await executeRegistrationSubmit();
+  });
+
+  // INTERCEPT FORM SUBMIT -> TAMPILKAN MODAL TERLEBIH DAHULU
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (submitBtn.disabled) return;
 
@@ -491,47 +644,126 @@ function setupFormHandlers() {
 
     if (honeyEmailVal !== '' || honeyPhoneVal !== '') {
       console.warn("Honeypot triggered! Bot detected.");
-
-      // FAKE SUCCESS RESPONSE
-      // Disable tombol instan agar bot mengira proses berjalan nyata
-      submitBtn.disabled = true;
-      submitBtn.style.opacity = '0.5';
-      submitBtn.style.cursor = 'not-allowed';
-      submitBtn.innerHTML = '<span class="relative z-10">MEMPROSES...</span>';
-
+      setSubmitButtonLoading();
       setTimeout(() => {
-        // Tampilkan notifikasi sukses palsu untuk membingungkan bot
         alert("Pendaftaran Berhasil! Silakan selesaikan pembayaran.");
-
-        // Reset form & kembalikan state tombol
         form.reset();
-        submitBtn.disabled = true;
-        submitBtn.style.opacity = '';
-        submitBtn.style.cursor = '';
-        submitBtn.innerHTML = 'DAFTAR SEKARANG';
-
-        // Arahkan ke landing page secara diam-diam
+        resetSubmitButtonState();
         navigatePage('landing');
       }, 1000);
       return;
     }
 
-    // Anti-Spam: Disable tombol submit instan & ubah visual
-    submitBtn.disabled = true;
-    submitBtn.style.opacity = '0.5';
-    submitBtn.style.cursor = 'not-allowed';
-    const originalSubmitHTML = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<span class="relative z-10">MEMPROSES...</span>';
+    // Tampilkan Pop-Up Peringatan Data Registrasi
+    modalWarning.classList.remove('hidden');
+  });
 
+  // FUNGSI EKSEKUSI PENDAFTARAN SETELAH "PAHAM, SAYA SETUJU" DIKLIK
+  async function executeRegistrationSubmit() {
+    setSubmitButtonLoading();
+
+    const emailVal = document.getElementById('input-email').value.trim();
+    const phoneVal = document.getElementById('input-phone').value.trim();
     const promo = getPromoDetails();
-    const tempRandomId = Math.floor(Math.random() * 9000) + 1000;
 
     try {
-      // Susun payload data pendaftaran (STRICT PAYLOAD CLEANING: Tidak memasukkan field honeypot ke Supabase)
+      // -------------------------------------------------------------
+      // STEP 1 (Pre-Validation DB): Cek apakah email ATAU no_hp sudah terdaftar
+      // -------------------------------------------------------------
+      if (supabaseClient) {
+        const checkQuery = supabaseClient
+          .from('pendaftar_running')
+          .select('id, email, nomor_hp')
+          .or(`email.eq.${emailVal},nomor_hp.eq.${phoneVal}`);
+
+        const { data: existingData, error: checkErr } = await withTimeout(checkQuery, 15000);
+
+        if (checkErr) {
+          if (checkErr.status === 429 || checkErr.status === 503) {
+            window.location.href = 'heavy_load.html';
+            return;
+          }
+          throw checkErr;
+        }
+
+        if (existingData && existingData.length > 0) {
+          alert("Email atau Nomor HP sudah terdaftar!");
+          resetSubmitButtonState();
+          return; // JANGAN lanjutkan ke upload foto
+        }
+      }
+
+      // -------------------------------------------------------------
+      // STEP 2 (Upload Foto ke Supabase Storage):
+      // - Lolos validasi, kompres file foto pendaftar.
+      // - Hitung/ambil urutan ID berikutnya untuk format `bukti_CP-5K-xxxx.jpeg`
+      // - Upload ke Supabase Storage Bucket `bukti-transfer`
+      // -------------------------------------------------------------
+      let publicProofUrl = null;
+      const rawFile = proofInput.files[0];
+
+      if (rawFile) {
+        // Kompresi Gambar
+        const compressedFile = await compressImage(rawFile, { maxWidth: 1000, quality: 0.7 });
+
+        let nextNoReg = 'CP-5K-0001';
+        if (supabaseClient) {
+          // Ambil ID tertinggi (max ID) saat ini agar selalu presisi dengan sequence Postgres (auto increment)
+          const { data: maxData } = await supabaseClient
+            .from('pendaftar_running')
+            .select('id')
+            .order('id', { ascending: false })
+            .limit(1);
+
+          const maxId = (maxData && maxData.length > 0 && maxData[0].id) ? Number(maxData[0].id) : 0;
+          const nextId = maxId + 1;
+          nextNoReg = 'CP-5K-' + String(nextId).padStart(4, '0');
+        } else {
+          const tempRandomId = Math.floor(Math.random() * 9000) + 1000;
+          nextNoReg = 'CP-5K-' + String(tempRandomId).padStart(4, '0');
+        }
+
+        const fileName = `bukti_${nextNoReg}.jpeg`;
+
+        if (supabaseClient) {
+          const { data: uploadData, error: uploadErr } = await supabaseClient.storage
+            .from('bukti-transfer')
+            .upload(fileName, compressedFile, {
+              cacheControl: '3600',
+              upsert: true
+            });
+
+          if (uploadErr) {
+            console.error("Gagal Upload Storage:", uploadErr);
+            throw new Error("Gagal mengunggah foto bukti bayar: " + uploadErr.message);
+          }
+
+          const { data: publicUrlData } = supabaseClient.storage
+            .from('bukti-transfer')
+            .getPublicUrl(fileName);
+
+          publicProofUrl = publicUrlData ? publicUrlData.publicUrl : null;
+        } else {
+          publicProofUrl = 'https://placeholder.storage/' + fileName;
+        }
+      }
+      const categoryEl = document.getElementById('select-category');
+      let finalPromoType = promo.type;
+      let finalPromoPrice = promo.price;
+
+      if (categoryEl && categoryEl.value === 'PELAJAR') {
+        finalPromoType = 'pelajar';
+        finalPromoPrice = 150000;
+      }
+
+      // -------------------------------------------------------------
+      // STEP 3 (Insert Single Transaction):
+      // Insert data teks pendaftar + Public URL foto bukti bayar sekaligus ke DB
+      // -------------------------------------------------------------
       const newPendaftar = {
         nama_lengkap: nameInput.value.trim(),
-        email: document.getElementById('input-email').value.trim(),
-        nomor_hp: document.getElementById('input-phone').value.trim(),
+        email: emailVal,
+        nomor_hp: phoneVal,
         tanggal_lahir: dobInput.value || null,
         jenis_kelamin: document.getElementById('select-gender').value,
         alamat_domisili: document.getElementById('input-domicile').value.trim() || null,
@@ -542,16 +774,15 @@ function setupFormHandlers() {
         riwayat_medis: document.getElementById('input-medical-history').value.trim() || null,
         ukuran_jersey: document.getElementById('select-jersey-size').value || null,
         nama_custom_bib: bibNameInput.value.trim() || null,
-        bukti_transfer_url: null, // Bukti transfer dikirim manual via WhatsApp
-        jenis_promosi: promo.type,
-        nominal_bayar: promo.price,
+        bukti_transfer_url: publicProofUrl,
+        jenis_promosi: finalPromoType,
+        nominal_bayar: finalPromoPrice,
         status_pembayaran: 'PENDING'
       };
 
       let insertedData = null;
 
       if (supabaseClient) {
-        // Circuit Breaker: Bungkus insert dengan timeout maksimal 15 detik
         const insertPromise = supabaseClient
           .from('pendaftar_running')
           .insert([newPendaftar])
@@ -560,25 +791,19 @@ function setupFormHandlers() {
         const { data, error } = await withTimeout(insertPromise, 15000);
 
         if (error) {
-          // Tangkap kode unik duplikat dari Postgres (unique constraint violation)
           if (error.code === '23505') {
-            alert("❌ Pendaftaran Gagal!\n\nEmail atau Nomor HP ini sudah terdaftar. Silakan gunakan data lain atau hubungi admin.");
-            // Kembalikan tombol submit agar user bisa koreksi dan coba lagi
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = '';
-            submitBtn.style.cursor = '';
-            submitBtn.innerHTML = originalSubmitHTML;
+            alert("❌ Pendaftaran Gagal!\n\nEmail atau Nomor HP ini sudah terdaftar. Silakan gunakan data lain.");
+            resetSubmitButtonState();
             return;
           }
-          // Cek HTTP 429 (Too Many Requests) / 503 (Service Unavailable) → redirect ke heavy_load
           if (error.status === 429 || error.status === 503) {
             window.location.href = 'heavy_load.html';
             return;
           }
           throw error;
         }
+
         if (data && data.length > 0) {
-          // Gabungkan data input dari memori browser dengan nomor_registrasi & nomor_bib dari database
           insertedData = {
             ...newPendaftar,
             nomor_registrasi: data[0].nomor_registrasi,
@@ -586,8 +811,7 @@ function setupFormHandlers() {
           };
         }
       } else {
-        // Mock data untuk mode demo jika Supabase tidak diset
-        console.warn("Supabase tidak aktif. Menggunakan Mode Demo Simulasi.");
+        const tempRandomId = Math.floor(Math.random() * 9000) + 1000;
         insertedData = {
           ...newPendaftar,
           id: tempRandomId,
@@ -596,26 +820,26 @@ function setupFormHandlers() {
         };
       }
 
+      // -------------------------------------------------------------
+      // STEP 4 (Redirect & Reset):
+      // Reset form, pindahkan ke confirmation-page, trigger instant scroll-to-top
+      // -------------------------------------------------------------
       state.registrationData = insertedData;
+      resetRegistrationForm();
       navigatePage('confirmation');
 
     } catch (err) {
       console.error(err);
-      // Circuit Breaker: Jika timeout (>15 detik) → redirect ke heavy_load.html
       if (err.message === 'GATEWAY_TIMEOUT') {
         window.location.href = 'heavy_load.html';
       } else {
         alert("Pendaftaran Gagal: " + err.message);
-        // Kembalikan tombol submit ke keadaan semula agar user bisa coba lagi
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = '';
-        submitBtn.style.cursor = '';
-        submitBtn.innerHTML = originalSubmitHTML;
+        resetSubmitButtonState();
       }
     }
-  });
+  }
 
-  // Tombol Konfirmasi WhatsApp (format teks otomatis + instruksi lampir bukti manual)
+  // Tombol Konfirmasi WhatsApp
   const waConfirmBtn = document.getElementById('btn-wa-confirm');
   if (waConfirmBtn) {
     waConfirmBtn.addEventListener('click', () => {
@@ -633,7 +857,7 @@ function setupFormHandlers() {
           - Kategori Tiket: ${data.jenis_promosi}
           - Nominal Bayar: Rp ${data.nominal_bayar.toLocaleString('id-ID')}
 
-          Saya sudah mentransfer sesuai nominal dan mengunggah bukti pembayaran setelah ini. Mohon segera diverifikasi. Terima kasih!`;
+          Saya telah mentransfer sesuai nominal dan mengunggah foto bukti pembayaran di sistem website. Mohon segera diverifikasi. Terima kasih!`;
 
       const waUrl = `https://wa.me/${WA_ADMIN_NUMBER}?text=${encodeURIComponent(message)}`;
       window.open(waUrl, '_blank');
