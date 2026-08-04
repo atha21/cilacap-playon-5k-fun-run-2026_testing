@@ -693,40 +693,79 @@ function setupFormHandlers() {
         }
       }
 
+      const categoryEl = document.getElementById('select-category');
+      let finalPromoType = promo.type;
+      let finalPromoPrice = promo.price;
+
+      if (categoryEl && categoryEl.value === 'PELAJAR') {
+        finalPromoType = 'pelajar';
+        finalPromoPrice = 150000;
+      }
+
       // -------------------------------------------------------------
-      // STEP 2 (Upload Foto ke Supabase Storage):
-      // - Lolos validasi, kompres file foto pendaftar.
-      // - Hitung/ambil urutan ID berikutnya untuk format `bukti_CP-5K-xxxx.jpeg`
-      // - Upload ke Supabase Storage Bucket `bukti-transfer`
+      // STEP 2 & 3: Jalankan Transaksi 2-Langkah untuk Menghindari Race Condition
       // -------------------------------------------------------------
-      let publicProofUrl = null;
+      let insertedData = null;
       const rawFile = proofInput.files[0];
 
-      if (rawFile) {
-        // Kompresi Gambar
-        const compressedFile = await compressImage(rawFile, { maxWidth: 1000, quality: 0.7 });
+      if (supabaseClient) {
+        // A. Insert teks pendaftar dahulu tanpa bukti_transfer_url agar PostgreSQL men-generate ID dan nomor_registrasi resmi
+        const tempPendaftar = {
+          nama_lengkap: nameInput.value.trim(),
+          email: emailVal,
+          nomor_hp: phoneVal,
+          tanggal_lahir: dobInput.value || null,
+          jenis_kelamin: document.getElementById('select-gender').value,
+          alamat_domisili: document.getElementById('input-domicile').value.trim() || null,
+          nama_kontak_darurat: document.getElementById('input-emergency-name').value.trim() || null,
+          hubungan_kontak_darurat: document.getElementById('input-emergency-relation').value.trim() || null,
+          no_telp_kontak_darurat: document.getElementById('input-emergency-phone').value.trim() || null,
+          golongan_darah: document.getElementById('select-blood-type').value || null,
+          riwayat_medis: document.getElementById('input-medical-history').value.trim() || null,
+          ukuran_jersey: document.getElementById('select-jersey-size').value || null,
+          nama_custom_bib: bibNameInput.value.trim() || null,
+          bukti_transfer_url: null, // Kosongkan dahulu
+          jenis_promosi: finalPromoType,
+          nominal_bayar: finalPromoPrice,
+          status_pembayaran: 'PENDING'
+        };
 
-        let nextNoReg = 'CP-5K-0001';
-        if (supabaseClient) {
-          // Ambil ID tertinggi (max ID) saat ini agar selalu presisi dengan sequence Postgres (auto increment)
-          const { data: maxData } = await supabaseClient
-            .from('pendaftar_running')
-            .select('id')
-            .order('id', { ascending: false })
-            .limit(1);
+        const insertPromise = supabaseClient
+          .from('pendaftar_running')
+          .insert([tempPendaftar])
+          .select('id, nomor_registrasi, nomor_bib');
 
-          const maxId = (maxData && maxData.length > 0 && maxData[0].id) ? Number(maxData[0].id) : 0;
-          const nextId = maxId + 1;
-          nextNoReg = 'CP-5K-' + String(nextId).padStart(4, '0');
-        } else {
-          const tempRandomId = Math.floor(Math.random() * 9000) + 1000;
-          nextNoReg = 'CP-5K-' + String(tempRandomId).padStart(4, '0');
+        const { data: dbRows, error: insertErr } = await withTimeout(insertPromise, 15000);
+
+        if (insertErr) {
+          if (insertErr.code === '23505') {
+            alert("❌ Pendaftaran Gagal!\n\nEmail atau Nomor HP ini sudah terdaftar. Silakan gunakan data lain.");
+            resetSubmitButtonState();
+            return;
+          }
+          if (insertErr.status === 429 || insertErr.status === 503) {
+            window.location.href = 'heavy_load.html';
+            return;
+          }
+          throw insertErr;
         }
 
-        const fileName = `bukti_${nextNoReg}.jpeg`;
+        if (!dbRows || dbRows.length === 0) {
+          throw new Error("Gagal mendapatkan data baris yang baru dimasukkan dari database.");
+        }
 
-        if (supabaseClient) {
-          const { data: uploadData, error: uploadErr } = await supabaseClient.storage
+        const officialId = dbRows[0].id;
+        const officialNoReg = dbRows[0].nomor_registrasi;
+        const officialNoBib = dbRows[0].nomor_bib;
+
+        let publicProofUrl = null;
+
+        // B. Upload file bukti bayar menggunakan officialNoReg yang valid dari Supabase
+        if (rawFile) {
+          const compressedFile = await compressImage(rawFile, { maxWidth: 1000, quality: 0.7 });
+          const fileName = `bukti_${officialNoReg}.jpeg`;
+
+          const { error: uploadErr } = await supabaseClient.storage
             .from('bukti-transfer')
             .upload(fileName, compressedFile, {
               cacheControl: '3600',
@@ -743,79 +782,52 @@ function setupFormHandlers() {
             .getPublicUrl(fileName);
 
           publicProofUrl = publicUrlData ? publicUrlData.publicUrl : null;
-        } else {
-          publicProofUrl = 'https://placeholder.storage/' + fileName;
-        }
-      }
-      const categoryEl = document.getElementById('select-category');
-      let finalPromoType = promo.type;
-      let finalPromoPrice = promo.price;
 
-      if (categoryEl && categoryEl.value === 'PELAJAR') {
-        finalPromoType = 'pelajar';
-        finalPromoPrice = 150000;
-      }
+          // C. Update Bukti URL ke data pendaftar yang sudah dibuat di langkah A
+          const { error: updateUrlErr } = await supabaseClient
+            .from('pendaftar_running')
+            .update({ bukti_transfer_url: publicProofUrl })
+            .eq('id', officialId);
 
-      // -------------------------------------------------------------
-      // STEP 3 (Insert Single Transaction):
-      // Insert data teks pendaftar + Public URL foto bukti bayar sekaligus ke DB
-      // -------------------------------------------------------------
-      const newPendaftar = {
-        nama_lengkap: nameInput.value.trim(),
-        email: emailVal,
-        nomor_hp: phoneVal,
-        tanggal_lahir: dobInput.value || null,
-        jenis_kelamin: document.getElementById('select-gender').value,
-        alamat_domisili: document.getElementById('input-domicile').value.trim() || null,
-        nama_kontak_darurat: document.getElementById('input-emergency-name').value.trim() || null,
-        hubungan_kontak_darurat: document.getElementById('input-emergency-relation').value.trim() || null,
-        no_telp_kontak_darurat: document.getElementById('input-emergency-phone').value.trim() || null,
-        golongan_darah: document.getElementById('select-blood-type').value || null,
-        riwayat_medis: document.getElementById('input-medical-history').value.trim() || null,
-        ukuran_jersey: document.getElementById('select-jersey-size').value || null,
-        nama_custom_bib: bibNameInput.value.trim() || null,
-        bukti_transfer_url: publicProofUrl,
-        jenis_promosi: finalPromoType,
-        nominal_bayar: finalPromoPrice,
-        status_pembayaran: 'PENDING'
-      };
-
-      let insertedData = null;
-
-      if (supabaseClient) {
-        const insertPromise = supabaseClient
-          .from('pendaftar_running')
-          .insert([newPendaftar])
-          .select('nomor_registrasi, nomor_bib');
-
-        const { data, error } = await withTimeout(insertPromise, 15000);
-
-        if (error) {
-          if (error.code === '23505') {
-            alert("❌ Pendaftaran Gagal!\n\nEmail atau Nomor HP ini sudah terdaftar. Silakan gunakan data lain.");
-            resetSubmitButtonState();
-            return;
+          if (updateUrlErr) {
+            console.error("Gagal update URL bukti transfer di database:", updateUrlErr);
+            throw updateUrlErr;
           }
-          if (error.status === 429 || error.status === 503) {
-            window.location.href = 'heavy_load.html';
-            return;
-          }
-          throw error;
         }
 
-        if (data && data.length > 0) {
-          insertedData = {
-            ...newPendaftar,
-            nomor_registrasi: data[0].nomor_registrasi,
-            nomor_bib: data[0].nomor_bib
-          };
-        }
-      } else {
-        const tempRandomId = Math.floor(Math.random() * 9000) + 1000;
         insertedData = {
-          ...newPendaftar,
+          ...tempPendaftar,
+          id: officialId,
+          nomor_registrasi: officialNoReg,
+          nomor_bib: officialNoBib,
+          bukti_transfer_url: publicProofUrl
+        };
+
+      } else {
+        // Mode Demo Offline
+        const tempRandomId = Math.floor(Math.random() * 9000) + 1000;
+        const mockNoReg = 'CP-5K-' + String(tempRandomId).padStart(4, '0');
+        
+        insertedData = {
+          nama_lengkap: nameInput.value.trim(),
+          email: emailVal,
+          nomor_hp: phoneVal,
+          tanggal_lahir: dobInput.value || null,
+          jenis_kelamin: document.getElementById('select-gender').value,
+          alamat_domisili: document.getElementById('input-domicile').value.trim() || null,
+          nama_kontak_darurat: document.getElementById('input-emergency-name').value.trim() || null,
+          hubungan_kontak_darurat: document.getElementById('input-emergency-relation').value.trim() || null,
+          no_telp_kontak_darurat: document.getElementById('input-emergency-phone').value.trim() || null,
+          golongan_darah: document.getElementById('select-blood-type').value || null,
+          riwayat_medis: document.getElementById('input-medical-history').value.trim() || null,
+          ukuran_jersey: document.getElementById('select-jersey-size').value || null,
+          nama_custom_bib: bibNameInput.value.trim() || null,
+          bukti_transfer_url: 'https://placeholder.storage/bukti_' + mockNoReg + '.jpeg',
+          jenis_promosi: finalPromoType,
+          nominal_bayar: finalPromoPrice,
+          status_pembayaran: 'PENDING',
           id: tempRandomId,
-          nomor_registrasi: 'CP-5K-' + String(tempRandomId).padStart(4, '0'),
+          nomor_registrasi: mockNoReg,
           nomor_bib: String(tempRandomId).padStart(4, '0')
         };
       }
