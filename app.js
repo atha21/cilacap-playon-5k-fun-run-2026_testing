@@ -1,11 +1,18 @@
 /**
- * CILACAP PLAYON 5K FUN RUN - Application Logic (Vanilla JS)
- */
+ * CILACAP PLAYON 5K FUN RUN - Website Logic
+*/
 
-// ==========================================
+console.log(
+  "Developed by Atha Rizqi, Fullstack Developer Intern\n %cStudent of Informatics Engineering - UPN Veteran Yogyakarta",
+  "color: #22c55e; font-size: 14px; font-weight: bold;",
+  "color: #9ca3af; font-size: 11px;"
+);
+
+
 // SISTEM SWITCH ENVIRONMENT & KONFIGURASI
-// ==========================================
-const IS_PRODUCTION = false; // Ubah ke true jika ingin beralih ke database resmi
+
+
+const IS_PRODUCTION = true; // Ubah ke true jika ingin beralih ke database resmi
 
 const CONFIG_TESTING = {
   SUPABASE_URL: "https://jmislcnmjvvrbvxcnmhn.supabase.co",
@@ -75,9 +82,9 @@ function getPromoDetails() {
   return { type, price, qrImage, period };
 }
 
-// ==========================================
+
 // CIRCUIT BREAKER & TRAFFIC PROTECTION
-// ==========================================
+
 
 // Fungsi bantu untuk membungkus promise dengan Timeout (default 15 detik)
 function withTimeout(promise, ms = 15000) {
@@ -129,9 +136,9 @@ async function checkHeavyLoadConfig() {
   }
 }
 
-// ==========================================
+
 // ENTRY POINT: DOMContentLoaded
-// ==========================================
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Jalankan pengecekan heavy load sesegera mungkin
   await checkHeavyLoadConfig();
@@ -165,9 +172,9 @@ function calcAge(dobString) {
 function updatePromoSummary() {
   const categoryEl = document.getElementById('select-category');
   const studentNoteEl = document.getElementById('student-card-note');
-  
+
   let promo = getPromoDetails();
-  
+
   // Jika memilih kategori PELAJAR, override jenis promosi dan harga
   if (categoryEl && categoryEl.value === 'PELAJAR') {
     promo = {
@@ -271,18 +278,37 @@ function navigatePage(newPage, options = { push: true }) {
   renderPage();
 }
 
+// Global variable to store the original HTML of the submit button
+let originalSubmitBtnHTML = '';
+
 // RESET FORM
 function resetRegistrationForm() {
   document.getElementById('reg-form').reset();
-  document.getElementById('submit-reg-btn').disabled = true;
+
+  // Reset submit button state and styles
+  const submitBtn = document.getElementById('submit-reg-btn');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '';
+    submitBtn.style.cursor = '';
+    if (originalSubmitBtnHTML) {
+      submitBtn.innerHTML = originalSubmitBtnHTML;
+    }
+  }
+
   document.getElementById('age-display-text').textContent = '';
   document.getElementById('bib-preview-text').textContent = '';
-  
-  // Reset proof upload preview
+
+  // Reset proof upload preview and prevent memory leaks
   const proofInput = document.getElementById('input-payment-proof');
   const previewContainer = document.getElementById('proof-preview-container');
   const previewImg = document.getElementById('proof-preview-img');
   const fileInfo = document.getElementById('proof-file-info');
+
+  if (previewImg && previewImg.src && previewImg.src.startsWith('blob:')) {
+    URL.revokeObjectURL(previewImg.src);
+  }
+
   if (proofInput) proofInput.value = '';
   if (previewImg) previewImg.src = '';
   if (fileInfo) fileInfo.textContent = '';
@@ -341,9 +367,9 @@ function compressImage(file, options = { maxWidth: 1000, quality: 0.7 }) {
   });
 }
 
-// ==========================================
+
 // SETUP EVENT NAVIGASI (+ Anti-Spam Click)
-// ==========================================
+
 function setupNavigation() {
   // Smooth scroll links: default browser anchor navigation preserves history and back/forward behavior
   document.documentElement.style.scrollBehavior = 'smooth';
@@ -410,13 +436,16 @@ function setupNavigation() {
   });
 }
 
-// ==========================================
+
 // SETUP LOGIKA FORMULIR & SUBMIT
-// ==========================================
+
 function setupFormHandlers() {
   const form = document.getElementById('reg-form');
   const submitBtn = document.getElementById('submit-reg-btn');
-  const originalSubmitHTML = submitBtn.innerHTML;
+  if (submitBtn && !originalSubmitBtnHTML) {
+    originalSubmitBtnHTML = submitBtn.innerHTML;
+  }
+  const originalSubmitHTML = originalSubmitBtnHTML || submitBtn.innerHTML;
 
   // Modal Peringatan Elements
   const modalWarning = document.getElementById('modal-warning');
@@ -441,6 +470,12 @@ function setupFormHandlers() {
           proofInput.value = '';
           return;
         }
+
+        // Prevent memory leak by revoking the old preview Blob URL
+        if (previewImg && previewImg.src && previewImg.src.startsWith('blob:')) {
+          URL.revokeObjectURL(previewImg.src);
+        }
+
         const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
         fileInfo.textContent = `${file.name} (${sizeMB} MB)`;
         const objectUrl = URL.createObjectURL(file);
@@ -455,6 +490,10 @@ function setupFormHandlers() {
 
   if (btnRemoveProof) {
     btnRemoveProof.addEventListener('click', () => {
+      // Prevent memory leak by revoking Blob URL
+      if (previewImg && previewImg.src && previewImg.src.startsWith('blob:')) {
+        URL.revokeObjectURL(previewImg.src);
+      }
       proofInput.value = '';
       previewImg.src = '';
       fileInfo.textContent = '';
@@ -480,9 +519,9 @@ function setupFormHandlers() {
     submitBtn.innerHTML = '<span class="relative z-10 flex items-center gap-2"><span>MEMPROSES...</span></span>';
   }
 
-  // ==========================================
+
   // DYNAMIC HONEYPOT INJECTION
-  // ==========================================
+
   const honeypotContainer = document.createElement('div');
   honeypotContainer.style.opacity = '0';
   honeypotContainer.style.position = 'absolute';
@@ -574,7 +613,7 @@ function setupFormHandlers() {
     categoryEl.addEventListener('change', updatePromoSummary);
   }
 
-  // Validasi form: semua field wajib terisi + foto bukti bayar terupload
+  // Validasi form: semua field wajib terisi + format email & hp valid + foto bukti bayar terupload
   function checkFormValidity() {
     const name = nameInput.value.trim();
     const email = document.getElementById('input-email').value.trim();
@@ -587,10 +626,14 @@ function setupFormHandlers() {
     const bloodType = document.getElementById('select-blood-type').value;
     const hasProofFile = proofInput && proofInput.files && proofInput.files.length > 0;
 
-    const phoneIsDigits = phone !== '' && /^\d+$/.test(phone);
-    const emergencyPhoneIsDigits = emergencyPhone !== '' && /^\d+$/.test(emergencyPhone);
+    // Format email minimal mengandung karakter '@' untuk mengakomodasi data dummy/pengujian
+    const emailIsValid = email !== '' && email.includes('@');
 
-    const allValid = name && email && phoneIsDigits && gender && category && emergencyName && emergencyRelation && emergencyPhoneIsDigits && bloodType && hasProofFile;
+    // Panjang nomor HP minimal 5 digit agar tetap mendukung data dummy pengujian (misal: 12345)
+    const phoneIsDigits = phone !== '' && /^\d+$/.test(phone) && phone.length >= 5 && phone.length <= 15;
+    const emergencyPhoneIsDigits = emergencyPhone !== '' && /^\d+$/.test(emergencyPhone) && emergencyPhone.length >= 5 && emergencyPhone.length <= 15;
+
+    const allValid = name && emailIsValid && phoneIsDigits && gender && category && emergencyName && emergencyRelation && emergencyPhoneIsDigits && bloodType && hasProofFile;
     submitBtn.disabled = !allValid;
   }
 
@@ -629,8 +672,20 @@ function setupFormHandlers() {
   });
 
   btnModalAgree.addEventListener('click', async () => {
+    if (btnModalAgree.disabled) return;
+
+    // Prevent double clicking / request spamming
+    btnModalAgree.disabled = true;
+    btnModalAgree.style.opacity = '0.5';
+    btnModalAgree.style.cursor = 'not-allowed';
+
     modalWarning.classList.add('hidden');
     await executeRegistrationSubmit();
+
+    // Re-enable in case user needs to try again on error
+    btnModalAgree.disabled = false;
+    btnModalAgree.style.opacity = '';
+    btnModalAgree.style.cursor = '';
   });
 
   // INTERCEPT FORM SUBMIT -> TAMPILKAN MODAL TERLEBIH DAHULU
@@ -689,7 +744,7 @@ function setupFormHandlers() {
         if (existingData && existingData.length > 0) {
           alert("Email atau Nomor HP sudah terdaftar!");
           resetSubmitButtonState();
-          return; // JANGAN lanjutkan ke upload foto
+          return; // JANGAN lanjutkan ke upload/insert
         }
       }
 
@@ -702,14 +757,43 @@ function setupFormHandlers() {
         finalPromoPrice = 150000;
       }
 
+      const rawFile = proofInput.files[0];
+      let publicProofUrl = null;
+
       // -------------------------------------------------------------
-      // STEP 2 & 3: Jalankan Transaksi 2-Langkah untuk Menghindari Race Condition
+      // STEP 2 & 3: Kompresi Gambar & Upload ke Storage Terlebih Dahulu
+      // -------------------------------------------------------------
+      if (supabaseClient && rawFile) {
+        const compressedFile = await compressImage(rawFile, { maxWidth: 1000, quality: 0.7 });
+        const uniqueSuffix = Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+        const cleanEmail = emailVal.replace(/[^a-zA-Z0-9]/g, '_');
+        const fileName = `bukti_${cleanEmail}_${uniqueSuffix}.jpeg`;
+
+        const { error: uploadErr } = await supabaseClient.storage
+          .from('bukti-transfer')
+          .upload(fileName, compressedFile, {
+            cacheControl: '3600',
+            upsert: true
+          });
+
+        if (uploadErr) {
+          console.error("Gagal Upload Storage:", uploadErr);
+          throw new Error("Gagal mengunggah foto bukti bayar: " + uploadErr.message);
+        }
+
+        const { data: publicUrlData } = supabaseClient.storage
+          .from('bukti-transfer')
+          .getPublicUrl(fileName);
+
+        publicProofUrl = publicUrlData ? publicUrlData.publicUrl : null;
+      }
+
+      // -------------------------------------------------------------
+      // STEP 4: Insert Data ke Database (Atomic & Contiguous)
       // -------------------------------------------------------------
       let insertedData = null;
-      const rawFile = proofInput.files[0];
 
       if (supabaseClient) {
-        // A. Insert teks pendaftar dahulu tanpa bukti_transfer_url agar PostgreSQL men-generate ID dan nomor_registrasi resmi
         const tempPendaftar = {
           nama_lengkap: nameInput.value.trim(),
           email: emailVal,
@@ -724,7 +808,7 @@ function setupFormHandlers() {
           riwayat_medis: document.getElementById('input-medical-history').value.trim() || null,
           ukuran_jersey: document.getElementById('select-jersey-size').value || null,
           nama_custom_bib: bibNameInput.value.trim() || null,
-          bukti_transfer_url: null, // Kosongkan dahulu
+          bukti_transfer_url: publicProofUrl,
           jenis_promosi: finalPromoType,
           nominal_bayar: finalPromoPrice,
           status_pembayaran: 'PENDING'
@@ -754,60 +838,18 @@ function setupFormHandlers() {
           throw new Error("Gagal mendapatkan data baris yang baru dimasukkan dari database.");
         }
 
-        const officialId = dbRows[0].id;
-        const officialNoReg = dbRows[0].nomor_registrasi;
-        const officialNoBib = dbRows[0].nomor_bib;
-
-        let publicProofUrl = null;
-
-        // B. Upload file bukti bayar menggunakan officialNoReg yang valid dari Supabase
-        if (rawFile) {
-          const compressedFile = await compressImage(rawFile, { maxWidth: 1000, quality: 0.7 });
-          const fileName = `bukti_${officialNoReg}.jpeg`;
-
-          const { error: uploadErr } = await supabaseClient.storage
-            .from('bukti-transfer')
-            .upload(fileName, compressedFile, {
-              cacheControl: '3600',
-              upsert: true
-            });
-
-          if (uploadErr) {
-            console.error("Gagal Upload Storage:", uploadErr);
-            throw new Error("Gagal mengunggah foto bukti bayar: " + uploadErr.message);
-          }
-
-          const { data: publicUrlData } = supabaseClient.storage
-            .from('bukti-transfer')
-            .getPublicUrl(fileName);
-
-          publicProofUrl = publicUrlData ? publicUrlData.publicUrl : null;
-
-          // C. Update Bukti URL ke data pendaftar yang sudah dibuat di langkah A
-          const { error: updateUrlErr } = await supabaseClient
-            .from('pendaftar_running')
-            .update({ bukti_transfer_url: publicProofUrl })
-            .eq('id', officialId);
-
-          if (updateUrlErr) {
-            console.error("Gagal update URL bukti transfer di database:", updateUrlErr);
-            throw updateUrlErr;
-          }
-        }
-
         insertedData = {
           ...tempPendaftar,
-          id: officialId,
-          nomor_registrasi: officialNoReg,
-          nomor_bib: officialNoBib,
-          bukti_transfer_url: publicProofUrl
+          id: dbRows[0].id,
+          nomor_registrasi: dbRows[0].nomor_registrasi,
+          nomor_bib: dbRows[0].nomor_bib
         };
 
       } else {
         // Mode Demo Offline
         const tempRandomId = Math.floor(Math.random() * 9000) + 1000;
         const mockNoReg = 'CP-5K-' + String(tempRandomId).padStart(4, '0');
-        
+
         insertedData = {
           nama_lengkap: nameInput.value.trim(),
           email: emailVal,
@@ -833,8 +875,7 @@ function setupFormHandlers() {
       }
 
       // -------------------------------------------------------------
-      // STEP 4 (Redirect & Reset):
-      // Reset form, pindahkan ke confirmation-page, trigger instant scroll-to-top
+      // STEP 5 (Redirect & Reset):
       // -------------------------------------------------------------
       state.registrationData = insertedData;
       resetRegistrationForm();
@@ -877,9 +918,9 @@ function setupFormHandlers() {
   }
 }
 
-// ==========================================
+
 // RENDER INFORMASI HALAMAN KONFIRMASI SUKSES & BIB CARD SVG
-// ==========================================
+
 function renderConfirmationDetails() {
   const data = state.registrationData;
   if (!data) return;

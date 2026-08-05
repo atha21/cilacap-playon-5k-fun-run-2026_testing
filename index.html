@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<!-- 
+  Project : Cilacap Playon 5K Web Registration
+  Author  : Atha Rizqi
+  Role    : Fullstack Developer Intern
+  Campus  : Informatics Engineering, UPN "Veteran" Yogyakarta
+-->
 <html lang="id" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
@@ -808,8 +814,8 @@
               
               <div class="space-y-3 text-xs text-brandDark/90 mb-6 w-full flex flex-col items-center">
                 <p><span class="font-semibold text-neutral-400">FORMAT:</span> <span class="font-bold text-brandDark">JPG / PNG / JPEG</span></p>
-                <p><span class="font-semibold text-neutral-400">UKURAN BERKAS:</span> <br><span class="font-black text-brandPink text-xl tracking-wider">MAKS. 5 MB</span></p>
-                <p><span class="font-semibold text-neutral-400">KETERANGAN:</span> <br><span class="font-bold text-brandDark uppercase">Dikompres Otomatis Sistem</span></p>
+                <p><span class="font-semibold text-neutral-400"></span> <br><span class="font-black text-brandPink text-xl tracking-wider"></span></p>
+                <p><span class="font-semibold text-neutral-400"></span> <br><span class="font-bold text-brandDark uppercase">Dikompres Otomatis Sistem</span></p>
               </div>
               
               <input type="file" id="input-payment-proof" accept="image/*" class="hidden" />
@@ -1075,9 +1081,12 @@
         </p>
         <div class="bg-amber-50 border border-amber-300 p-3 mb-5 flex items-start gap-2">
           <span class="text-amber-500 text-base leading-none mt-px">⚠️</span>
-          <p class="text-[11px] text-amber-800 leading-relaxed">
-            <strong>PENTING:</strong> Setelah pesan otomatis terkirim, kamu <strong>wajib melampirkan foto/screenshot bukti transfer</strong> secara manual di dalam chat WhatsApp tersebut agar pembayaran bisa segera diverifikasi oleh panitia.
-          </p>
+          <div>
+            <p class="font-title font-extrabold text-[11px] tracking-wider text-amber-900 mb-0.5 uppercase">PENTING: KONFIRMASI WHATSAPP SETELAH DAFTAR</p>
+            <p class="text-[11px] text-amber-800 leading-relaxed">
+              Setelah pendaftaran selesai & bukti bayar diunggah, kamu <strong>WAJIB menekan tombol "Konfirmasi WhatsApp"</strong> pada halaman sukses untuk memverifikasi transaksi ke panitia Cilacap Playon!
+            </p>
+          </div>
         </div>
         <button
           id="btn-wa-confirm"
@@ -1092,7 +1101,10 @@
 
       <!-- Hari Pelaksanaan -->
       <div class="w-full bg-brandWhite border border-brandPinkLight shadow-sm px-6 py-6 mb-8">
-        <p class="font-title font-bold text-[11px] tracking-wider text-brandTealDark mb-4 uppercase">HARI PELAKSANAAN</p>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-7 h-[3px] bg-brandTealDark"></div>
+          <span class="font-title font-extrabold text-[11px] tracking-wider text-brandTealDark uppercase">HARI PELAKSANAAN</span>
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div class="p-4 rounded-lg bg-brandTeal text-brandWhite">
             <p class="text-brandWhite/80 text-[11px]">Hari / Tanggal</p>
@@ -1114,7 +1126,10 @@
       </div>
 
       <div class="w-full bg-brandWhite border border-brandPinkLight shadow-sm px-6 py-6 mb-8">
-        <p class="font-title font-bold text-[11px] tracking-wider text-brandPink mb-4 uppercase">KONTAK PANITIA</p>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-7 h-[3px] bg-brandPink"></div>
+          <span class="font-title font-extrabold text-[11px] tracking-wider text-brandPink uppercase">KONTAK PANITIA</span>
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div class="p-4 rounded-lg bg-brandMelon text-brandWhite">
             <p class="text-brandWhite/80 text-[11px] uppercase tracking-wider">WhatsApp</p>
