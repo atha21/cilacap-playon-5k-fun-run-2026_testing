@@ -12,7 +12,7 @@ console.log(
 // SISTEM SWITCH ENVIRONMENT & KONFIGURASI
 
 
-const IS_PRODUCTION = false; // Ubah ke true jika ingin beralih ke database resmi
+const IS_PRODUCTION = true; // Ubah ke true jika ingin beralih ke database resmi
 
 const CONFIG_TESTING = {
   SUPABASE_URL: "https://jmislcnmjvvrbvxcnmhn.supabase.co",
@@ -723,15 +723,13 @@ function setupFormHandlers() {
 
     try {
       // -------------------------------------------------------------
-      // STEP 1 (Pre-Validation DB): Cek apakah email ATAU no_hp sudah terdaftar
+      // STEP 1 (Pre-Validation DB): Cek apakah email ATAU no_hp sudah terdaftar via RPC aman
       // -------------------------------------------------------------
       if (supabaseClient) {
-        const checkQuery = supabaseClient
-          .from('pendaftar_running')
-          .select('id, email, nomor_hp')
-          .or(`email.eq.${emailVal},nomor_hp.eq.${phoneVal}`);
-
-        const { data: existingData, error: checkErr } = await withTimeout(checkQuery, 15000);
+        const { data: exists, error: checkErr } = await withTimeout(
+          supabaseClient.rpc('check_runner_exists', { p_email: emailVal, p_phone: phoneVal }),
+          15000
+        );
 
         if (checkErr) {
           if (checkErr.status === 429 || checkErr.status === 503) {
@@ -741,7 +739,7 @@ function setupFormHandlers() {
           throw checkErr;
         }
 
-        if (existingData && existingData.length > 0) {
+        if (exists) {
           alert("Email atau Nomor HP sudah terdaftar!");
           resetSubmitButtonState();
           return; // JANGAN lanjutkan ke upload/insert
