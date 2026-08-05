@@ -12,7 +12,7 @@ console.log(
 // SISTEM SWITCH ENVIRONMENT & KONFIGURASI
 
 
-const IS_PRODUCTION = true; // Ubah ke true jika ingin beralih ke database resmi
+const IS_PRODUCTION = false; // Ubah ke true jika ingin beralih ke database resmi
 
 const CONFIG_TESTING = {
   SUPABASE_URL: "https://jmislcnmjvvrbvxcnmhn.supabase.co",
